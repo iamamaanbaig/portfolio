@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amaan Baig · UX &amp; Product Designer</title>
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
+  <meta name="description" content="Amaan Baig, UX &amp; Product Designer. I make complicated software feel obvious.">
+  <!-- the link preview when the page is shared: the hero as a 1200×630 card -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Amaan Baig">
+  <meta property="og:title" content="Amaan Baig · UX &amp; Product Designer">
+  <meta property="og:description" content="Amaan Baig, UX &amp; Product Designer. I make complicated software feel obvious.">
+  <meta property="og:url" content="https://www.iamamaanbaig.com/">
+  <meta property="og:image" content="https://www.iamamaanbaig.com/assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="UX &amp; Product Designer: I make complicated software feel obvious. Amaan Baig's signature in blue light.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap">
+  <link rel="stylesheet" href="styles.css?v=r1">
+  <link rel="stylesheet" href="case-studies/case-study.css?v=r1">
+  <link rel="stylesheet" href="contact/contact.css?v=r1">
+  <link rel="stylesheet" href="home.css?v=r1">
+</head>
+<body>
+  <header class="site-head">
+    <a class="logo" href="#home">Amaan Baig<span>.</span></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="#home" data-to="0" aria-current="true">Home</a>
+      <span class="nav-work">
+        <a href="#work" data-to="1" aria-haspopup="true" aria-expanded="false" aria-controls="work-menu">Work</a>
+        <span class="sq-row">
+          <a class="sq" href="#gifa" data-to="1" aria-label="Case study 1: Saved millions of dollars in taxes"></a>
+          <a class="sq" href="#fee-management" data-to="2" aria-label="Case study 2: Cut fee management effort by 40 minutes"></a>
+          <a class="sq" href="#creating-automation" data-to="3" aria-label="Case study 3: Reduced support calls"></a>
+          <a class="sq" href="#stamp" data-to="4" aria-label="Case study 4, coming soon: Reduced the compliance review effort with AI"></a>
+        </span>
+      </span>
+      <a href="#contact" data-to="5">Contact</a>
+    </nav>
+
+    <!-- WORK's menu: the case studies as a list; the one under the pointer turns light and opens its case study's
+         opening beside it, so item and preview read as one light shape; the preview holds its main screen -->
+    <div class="work-menu" id="work-menu" aria-label="Case studies">
+      <div class="wm-list">
+        <a class="wm-item" href="case-studies/global-incentive-fee-awards/" data-i="0"><span class="wm-title">Saved millions of dollars in taxes</span><span class="wm-arrow" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 11.5l7-7M5.5 4.5h6v6"/></svg></span><span class="wm-desc">By improving stakeholder visibility and coordination across a complex, multi&#8209;stakeholder process.</span></a>
+        <a class="wm-item" href="case-studies/fee-management/" data-i="1"><span class="wm-title">Cut fee management effort by 40 minutes</span><span class="wm-arrow" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 11.5l7-7M5.5 4.5h6v6"/></svg></span><span class="wm-desc">By reducing the fee templates a single classroom needed from an average of 9&nbsp;to&nbsp;1.</span></a>
+        <a class="wm-item" href="case-studies/creating-automation/" data-i="2"><span class="wm-title">Reduced support calls</span><span class="wm-arrow" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 11.5l7-7M5.5 4.5h6v6"/></svg></span><span class="wm-desc">By making it easy to create a new automation.</span></a>
+        <div class="wm-item soon" data-i="3"><span class="wm-title">Reduced the compliance review effort with AI</span><span class="wm-arrow wm-soon">Soon</span><span class="wm-desc">By designing an AI feature that does all the review work and suggests a final action.</span></div>
+      </div>
+      <div class="wm-preview" aria-hidden="true">
+        <img class="wm-shot" width="1733" height="1092" src="GIFAcasestudyimages/GIFAherocenter.webp" alt="" loading="lazy" decoding="async">
+        <img class="wm-shot" width="1505" height="970" src="Feemanagementcasestudyimages/Heroleft.webp" alt="" loading="lazy" decoding="async">
+        <img class="wm-shot" width="1793" height="1152" src="Creatingautomationcasestudyimages/Group%201321317990.webp" alt="" loading="lazy" decoding="async">
+        <img class="wm-shot" width="1575" height="988" src="Stampcasestudyimages/Hero%20Image%20Left.webp" alt="" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </header>
+  <div class="wm-scrim" aria-hidden="true"></div>
+
+  <main class="page snaps">
+    <section class="snap s-home" id="home" aria-label="About">
+      <div class="glow"></div>
+      <div class="sig" aria-hidden="true"></div>
+      <h1 class="hero-title">UX &amp; Product Designer</h1>
+      <p class="tagline">I make complicated software feel obvious.</p>
+      <a class="down" href="#work" data-to="1"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v11M3.5 9l4.5 4.5L12.5 9"/></svg>Selected case studies</a>
+    </section>
+
+    <div id="work">
+      <section class="snap s-work" id="gifa" aria-labelledby="t-gifa">
+        <div class="op-shot"><span class="pv-comp trio">
+          <img class="pv-left" width="1653" height="1092" src="GIFAcasestudyimages/GIFAheroleft.webp" alt="">
+          <img class="pv-right" width="1653" height="1092" src="GIFAcasestudyimages/GIFAheroright.webp" alt="">
+          <img class="pv-center" width="1733" height="1092" src="GIFAcasestudyimages/GIFAherocenter.webp" alt="">
+        </span></div>
+        <div class="cap">
+          <h2 id="t-gifa"><a href="case-studies/global-incentive-fee-awards/">Saved millions of dollars in taxes</a></h2>
+          <span class="arrow" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 11.5l7-7M5.5 4.5h6v6"/></svg></span>
+          <p>By improving stakeholder visibility and coordination across a complex, multi&#8209;stakeholder process (<span class="term" tabindex="0" aria-describedby="tip-gifa"><span class="accent">GIFA</span><span class="tip" id="tip-gifa" role="tooltip">Global Incentive Fee Awards</span></span>), helping prevent the delays that result in tax liability.</p>
+        </div>
+      </section>
+
+      <section class="snap s-work" id="fee-management" aria-labelledby="t-fee">
+        <div class="op-shot"><span class="pv-comp duo">
+          <img class="pv-back" width="1254" height="813" src="Feemanagementcasestudyimages/Heroright.webp" alt="">
+          <img class="pv-front" width="1505" height="970" src="Feemanagementcasestudyimages/Heroleft.webp" alt="">
+        </span></div>
+        <div class="cap">
+          <h2 id="t-fee"><a href="case-studies/fee-management/">Cut fee management effort by 40 minutes</a></h2>
+          <span class="arrow" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 11.5l7-7M5.5 4.5h6v6"/></svg></span>
+          <p>By reducing the fee templates a single classroom needed from an average of 9&nbsp;to&nbsp;1.</p>
+        </div>
+      </section>
+
+      <section class="snap s-work" id="creating-automation" aria-labelledby="t-auto">
+        <div class="op-shot"><span class="pv-comp solo">
+          <img class="pv-center" width="1793" height="1152" src="Creatingautomationcasestudyimages/Group%201321317990.webp" alt="">
+        </span></div>
+        <div class="cap">
+          <h2 id="t-auto"><a href="case-studies/creating-automation/">Reduced support calls</a></h2>
+          <span class="arrow" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 11.5l7-7M5.5 4.5h6v6"/></svg></span>
+          <p>By making it easy to create a new automation.</p>
+        </div>
+      </section>
+
+      <!-- the case study to come: a full section, but not a link; its opening pairs two screens -->
+      <section class="snap s-work soon" id="stamp" aria-labelledby="t-stamp">
+        <div class="op-shot"><span class="pv-comp duo">
+          <img class="pv-back" width="1575" height="989" src="Stampcasestudyimages/Hero%20Image%20right.webp" alt="">
+          <img class="pv-front" width="1575" height="988" src="Stampcasestudyimages/Hero%20Image%20Left.webp" alt="">
+        </span></div>
+        <div class="cap">
+          <h2 id="t-stamp">Reduced the compliance review effort with AI</h2>
+          <span class="arrow soon-tag">Soon</span>
+          <p>By designing an AI feature that does all the review work and suggests a final action, with AI reasoning and evidence for humans.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="snap s-contact contact-screen" id="contact" aria-labelledby="contact-title">
+      <div class="contact">
+        <svg class="at" viewBox="0 0 16 16" aria-hidden="true">
+          <defs>
+            <linearGradient id="at-fill" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="16"><stop offset="0" stop-color="#6BABFF"/><stop offset="1" stop-color="#0051FF"/></linearGradient>
+            <mask id="at-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
+              <rect width="16" height="16" fill="#fff"/>
+              <path fill="#000" transform="translate(-2.0010 15.9983) scale(0.006104 -0.006104)" d="M2293 2621V2785H983V2621ZM983 2457V2621H655V2457ZM2621 2457V2621H2293V2457ZM655 2293V2457H491V2293ZM2785 2293V2457H2621V2293ZM491 1966V2293H327V1966ZM2949 1966V2293H2785V1966ZM327 655V1966H164V655ZM1802 1802V1966H1310V1802ZM2130 655V1146H2293V1638H2457V1966H2130V1802H1802V1638H1966V1146H1802V819H1966V655ZM3113 1146V1966H2949V1146ZM1638 491V655H1147V819H983V1310H1147V1638H1310V1802H983V1638H819V1310H655V819H819V655H983V491ZM2949 819V1146H2785V819ZM1802 655V819H1638V655ZM2785 655V819H2457V655ZM491 327V655H327V327ZM2457 491V655H2130V491ZM2949 327V491H2785V327ZM655 163V327H491V163ZM2785 163V327H2621V163ZM983 0V163H655V0ZM2621 0V163H2293V0ZM2293 -163V0H983V-163Z"/>
+            </mask>
+          </defs>
+          <rect width="16" height="16" fill="url(#at-fill)" mask="url(#at-cut)"/>
+        </svg>
+        <form class="msg" id="msg">
+          <h2 class="contact-title" id="contact-title"><label for="msg-text">Have something complicated? Let’s talk</label></h2>
+          <div class="msg-field">
+            <textarea id="msg-text" name="message" rows="1" placeholder="Type your message" required></textarea>
+            <button class="msg-send" type="submit" aria-label="Send message"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M5.5 4.5h6v6"/></svg></button>
+          </div>
+          <p class="msg-or">Or connect on <a class="chip" href="#" rel="noopener" target="_blank">LinkedIn</a></p>
+        </form>
+      </div>
+      <footer class="contact-foot"><p>© 2026 Amaan Baig</p></footer>
+    </section>
+  </main>
+  <script src="contact/contact.js?v=r1" defer></script>
+  <script src="home.js?v=r1" defer></script>
+  <script src="site-menu.js?v=r1" defer></script>
+</body>
+</html>

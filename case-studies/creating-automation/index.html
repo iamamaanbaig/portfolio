@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Creating Automation · Case study</title>
+  <link rel="icon" href="../../favicon.svg?v=2" type="image/svg+xml">
+  <meta name="description" content="How making it easy to create a new automation reduced support calls.">
+  <!-- the link preview when the page is shared: the hero as a 1200×630 card -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Amaan Baig">
+  <meta property="og:title" content="Creating Automation · Case study">
+  <meta property="og:description" content="How making it easy to create a new automation reduced support calls.">
+  <meta property="og:url" content="https://www.iamamaanbaig.com/case-studies/creating-automation/">
+  <meta property="og:image" content="https://www.iamamaanbaig.com/assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="UX &amp; Product Designer: I make complicated software feel obvious. Amaan Baig's signature in blue light.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap">
+  <link rel="stylesheet" href="../../styles.css?v=r1">
+  <link rel="stylesheet" href="../case-study.css?v=r1">
+  <script src="../case-study.js?v=r1" defer></script>
+</head>
+<body>
+  <main class="page">
+    <!-- Hero: screen, title, summary and project facts -->
+    <section class="hero" id="overview" data-stop>
+      <!-- the site header: opens the first screen, then floats (case-study.js) -->
+      <div class="head-slot">
+        <header class="site-head">
+          <a class="logo" href="../../">Amaan Baig<span>.</span></a>
+          <nav class="site-nav" aria-label="Main"><a href="../../">Home</a><span class="nav-work"><a href="../../#work" aria-current="true">Work</a><span class="sq-row"><a class="sq" href="../../#gifa" aria-label="Case study 1: Saved millions of dollars in taxes"></a><a class="sq" href="../../#fee-management" aria-label="Case study 2: Cut fee management effort by 40 minutes"></a><a class="sq" href="../../#creating-automation" aria-label="Case study 3: Reduced support calls" aria-current="true"></a><a class="sq" href="../../#stamp" aria-label="Case study 4, coming soon: Reduced the compliance review effort with AI"></a></span></span><a href="../../#contact">Contact</a></nav>
+        </header>
+      </div>
+      <div class="hero-shot">
+        <!-- one laptop, centred and cut off by the bottom of the container -->
+        <div class="hero-comp solo">
+          <img class="hs-center" src="../../Creatingautomationcasestudyimages/Group%201321317990.webp" alt="The redesigned automation builder: five guided steps (event, condition, action, when), with events added from a searchable list" width="1793" height="1152" fetchpriority="high" decoding="async">
+        </div>
+      </div>
+      <div class="hero-body">
+        <h1>Reduced support calls</h1>
+        <p class="lede">By making it easy to create a new automation.</p>
+      </div>
+      <dl class="facts">
+        <div><dt>Team</dt><dd>Founder &amp; CEO, VP Product, Designer (me), Product Support Team</dd></div>
+        <div><dt>Client</dt><dd>Zithara.ai</dd></div>
+      </dl>
+    </section>
+
+    <!-- The problem: one statement -->
+    <section class="panel problem" id="problem" aria-labelledby="problem-title" data-stop>
+      <header class="sec-head">
+        <span class="ghost" aria-hidden="true">Problem</span>
+        <h2 class="sec-title" id="problem-title">The problem</h2>
+      </header>
+      <p class="lede">Users couldn’t create new automations on their own, so they <strong>reached out to the support team to be guided through it</strong>.</p>
+    </section>
+
+    <!-- User problems: how we found them, then the title stays pinned while each problem snaps into place -->
+    <section class="panel solutions snap-sec" id="user-problems" aria-labelledby="user-problems-title" data-stop>
+      <div class="pin">
+        <header class="sec-head">
+          <span class="ghost" aria-hidden="true">User Problems</span>
+          <h2 class="sec-title" id="user-problems-title">User problems <span class="count" aria-hidden="true"></span></h2>
+        </header>
+      </div>
+
+      <div class="up-intro">
+        <span class="sol-label">How we understood the problem</span>
+        <ul>
+          <li>Joined the support calls for these cases</li>
+          <li>Evaluated the current design</li>
+        </ul>
+      </div>
+
+      <article class="sol-row vw" data-row data-stop>
+        <div class="sol-problem">
+          <span class="sol-label">Problem</span>
+          <span class="num accent" aria-hidden="true">1</span>
+          <h3>Unclear option titles</h3>
+          <div class="sol-desc">
+            <p>The options were named in industry-standard marketing terms, <strong>designed with marketers in mind, but the users weren’t marketers</strong>. Across all 23 use cases, they couldn’t tell what each option meant, what it did, or how to use it to create what they wanted.</p>
+            <p>For example, what is “Cart is Created” for, and how is it different from “Cart is Updated”?</p>
+          </div>
+        </div>
+        <figure class="sol-shot">
+          <figcaption><span class="sol-cap">The event options</span></figcaption>
+          <button type="button" class="shot sol-view" aria-label="Enlarge: The event options">
+            <img class="on" src="../../Creatingautomationcasestudyimages/Events.webp" alt="The old builder’s event options, such as Cart is Created, Cart is Updated and COD Transaction, underlined as hard to tell apart" data-label="The event options" width="1932" height="1321" loading="lazy" decoding="async">
+            <span class="zoom-ic" aria-hidden="true"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14M7 5v4M5 7h4"/></svg></span>
+          </button>
+        </figure>
+      </article>
+
+      <article class="sol-row vw" data-row data-stop>
+        <div class="sol-problem">
+          <span class="sol-label">Problem</span>
+          <span class="num accent" aria-hidden="true">2</span>
+          <h3>Tabs users couldn’t make sense of</h3>
+          <div class="sol-desc">
+            <p>The builder split its triggers across two tabs, “Events” and “Recurrence”, but users couldn’t work out what each tab was for.</p>
+          </div>
+        </div>
+        <figure class="sol-shot">
+          <figcaption><span class="sol-cap">The Events and Recurrence tabs</span></figcaption>
+          <button type="button" class="shot sol-view" aria-label="Enlarge: The Events and Recurrence tabs">
+            <img class="on" src="../../Creatingautomationcasestudyimages/Add%20Events%20screen.webp" alt="The old builder with its two tabs, Events and Recurrence, marked as tab 1 and tab 2" data-label="The Events and Recurrence tabs" width="1931" height="1321" loading="lazy" decoding="async">
+            <span class="zoom-ic" aria-hidden="true"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14M7 5v4M5 7h4"/></svg></span>
+          </button>
+        </figure>
+      </article>
+
+      <article class="sol-row vw" data-row data-stop>
+        <div class="sol-problem">
+          <span class="sol-label">Problem</span>
+          <span class="num accent" aria-hidden="true">3</span>
+          <h3>Conditions cut off from their events</h3>
+          <div class="sol-desc">
+            <p>Events and conditions sat in separate lists, so it was hard to tell which condition belonged to which event, and how they worked together.</p>
+          </div>
+        </div>
+        <figure class="sol-shot">
+          <figcaption><span class="sol-cap">Which condition belongs to which event</span></figcaption>
+          <button type="button" class="shot sol-view" aria-label="Enlarge: Which condition belongs to which event">
+            <img class="on" src="../../Creatingautomationcasestudyimages/Add%20condition%20for%20selected%20events.webp" alt="Arrows from events to the condition sections they belong to, such as COD Transaction to Transaction and Create Task to Task, far apart on the page" data-label="Which condition belongs to which event" width="1130" height="1321" loading="lazy" decoding="async">
+            <span class="zoom-ic" aria-hidden="true"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14M7 5v4M5 7h4"/></svg></span>
+          </button>
+        </figure>
+      </article>
+    </section>
+
+    <!-- Goals: what the new design had to do, one per user problem -->
+    <section class="panel impact goals" id="goals" aria-labelledby="goals-title" data-stop>
+      <header class="sec-head">
+        <span class="ghost" aria-hidden="true">Goals</span>
+        <h2 class="sec-title" id="goals-title">Goals &amp; requirements</h2>
+      </header>
+      <p class="impact-lead">The new design had to help users create an automation <strong>without needing help or having doubts</strong>.</p>
+      <div class="outcomes">
+        <article class="outcome">
+          <span class="tick" aria-hidden="true"></span>
+          <h3>Guide every step</h3>
+          <p>Lead the user through each step of the process.</p>
+        </article>
+        <article class="outcome">
+          <span class="tick" aria-hidden="true"></span>
+          <h3>Make every option clear</h3>
+          <p>Make the context and use of each option simple to understand.</p>
+        </article>
+        <article class="outcome">
+          <span class="tick" aria-hidden="true"></span>
+          <h3>Connect events and conditions</h3>
+          <p>Show how events and conditions relate, in a way that feels familiar from similar tools in the industry.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Design iteration 1: the idea and the screen on the left; test results and observations on the right -->
+    <section class="panel iter one-screen" id="iteration-1" aria-labelledby="iteration-1-title" data-stop>
+      <header class="sec-head">
+        <span class="ghost" aria-hidden="true">Iteration 1</span>
+        <h2 class="sec-title" id="iteration-1-title">Design iteration 1 &amp; user testing</h2>
+      </header>
+      <div class="it-grid">
+        <div class="it-main flush">
+          <div class="it-text">
+            <p>Zithara’s automation system works in 5 fixed steps, unlike open-ended flow builders.</p>
+            <p>So we designed a 5-step builder that groups the options into task categories, so users can understand it at a glance.</p>
+          </div>
+          <figure class="ch-fig it-shot">
+            <figcaption>Automation builder: design iteration 1</figcaption>
+            <button type="button" class="zoom bleed-b" aria-label="Enlarge: Automation builder, design iteration 1">
+              <img src="../../Creatingautomationcasestudyimages/Automation%20Builder%20-%20Design%20Iteration%201.webp" alt="Design iteration 1: the automation builder in 5 steps, with two events added and a customer condition below them" width="1793" height="957" loading="lazy" decoding="async">
+              <span class="zoom-ic" aria-hidden="true"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14M7 5v4M5 7h4"/></svg></span>
+            </button>
+          </figure>
+        </div>
+        <div class="it-side">
+          <div class="it-cell">
+            <span class="sol-label">Results</span>
+            <p class="tested"><span class="persona-ic" aria-hidden="true"></span>Tested with <strong>4 users</strong> (from clients)</p>
+            <div class="stats">
+              <div class="stat"><span class="stat-num">100%</span><span class="stat-text">Completed the task</span></div>
+              <div class="stat warn"><span class="stat-num">50%</span><span class="stat-text">Got stuck adding a condition</span></div>
+            </div>
+          </div>
+          <div class="it-cell">
+            <span class="sol-label">Other observations</span>
+            <ul class="bullets small">
+            <li>Renaming “Add event” to “Add more events” after the first may show that more can be added (same for actions)</li>
+            <li>Users paused briefly before finding the question that tells them what to do</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Design iteration 2: the screen on the left; test results on the right -->
+    <section class="panel iter one-screen" id="iteration-2" aria-labelledby="iteration-2-title" data-stop>
+      <header class="sec-head">
+        <span class="ghost" aria-hidden="true">Iteration 2</span>
+        <h2 class="sec-title" id="iteration-2-title">Design iteration 2 &amp; user testing</h2>
+      </header>
+      <div class="it-grid">
+        <div class="it-main">
+          <figure class="ch-fig it-shot">
+            <div class="zoom live">
+              <iframe src="https://www.loom.com/embed/16b614e1085d4ac1a0d1ff7add173a8c?hideEmbedTopBar=true" title="Design iteration 2: video walkthrough" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </figure>
+        </div>
+        <div class="it-side">
+          <div class="it-cell">
+            <span class="sol-label">Results</span>
+            <p class="tested"><span class="persona-ic" aria-hidden="true"></span>Tested with <strong>3 users</strong> (from clients)</p>
+            <div class="stats">
+              <div class="stat"><span class="stat-num">100%</span><span class="stat-text">Completed the task</span></div>
+              <div class="stat"><span class="stat-num">0%</span><span class="stat-text">Got stuck or confused</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project impact: the overall outcome, one screen -->
+    <section class="panel impact" id="impact" aria-labelledby="impact-title" data-stop>
+      <header class="sec-head">
+        <span class="ghost" aria-hidden="true">Impact</span>
+        <h2 class="sec-title" id="impact-title">Impact</h2>
+      </header>
+      <p class="impact-lead">Users can now create a new automation <strong>on their own, without help</strong>, which cut down the calls to the support team.</p>
+    </section>
+
+    <!-- Prototype: one frame filling the screen below the section title -->
+    <section class="panel prototype one-screen" id="prototype" aria-labelledby="prototype-title" data-stop>
+      <header class="sec-head">
+        <span class="ghost" aria-hidden="true">Prototype</span>
+        <h2 class="sec-title" id="prototype-title">Interact with the prototype</h2>
+      </header>
+      <div class="wide-shot">
+        <figure class="ch-fig">
+          <div class="zoom live">
+            <iframe src="https://www.figma.com/embed?embed_host=share&amp;url=https%3A%2F%2Fwww.figma.com%2Fproto%2Fr6yeTTgNU7fB7CUYnoVq4T%2FZithara-Designs%3Fnode-id%3D643-57923%26page-id%3D643%253A57274%26scaling%3Dcontain%26starting-point-node-id%3D643%253A57923" title="Creating Automation: interactive Figma prototype" loading="lazy" allow="clipboard-write; fullscreen" allowfullscreen></iframe>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Site footer: links, other projects, copyright -->
+    <footer class="site-foot" data-stop>
+      <div class="sf-main">
+        <nav class="sf-links" aria-label="Footer">
+          <a href="#overview" class="to-top">Back to top <span aria-hidden="true">↑</span></a>
+          <a href="../../">Home</a>
+          <a href="../../#contact">Contact</a>
+        </nav>
+        <section class="sf-projects" aria-labelledby="op-title">
+          <h2 class="sf-head" id="op-title">Other projects</h2>
+          <a class="op-card" href="../global-incentive-fee-awards/">
+            <div class="shot op-gifa"><img src="../../GIFAcasestudyimages/GIFAherocenter.webp" alt="" loading="lazy" decoding="async"></div>
+            <div class="op-title"><h3>Saved millions of dollars in taxes</h3><svg class="op-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M5.5 4.5h6v6"/></svg></div>
+            <p>By improving stakeholder visibility and coordination across a complex, multi-stakeholder process.</p>
+          </a>
+          <a class="op-card" href="../fee-management/">
+            <div class="shot op-fee"><img src="../../Feemanagementcasestudyimages/Heroleft.webp" alt="" loading="lazy" decoding="async"></div>
+            <div class="op-title"><h3>Cut fee management effort by 40 minutes</h3><svg class="op-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M5.5 4.5h6v6"/></svg></div>
+            <p>By reducing the fee templates a single classroom needed from an average of 9&nbsp;to&nbsp;1.</p>
+          </a>
+        </section>
+      </div>
+      <p class="sf-copy">© 2026 Amaan Baig</p>
+    </footer>
+  </main>
+
+  <!-- Image viewer: opens from any enlargeable image, steps through the images in that section -->
+  <div class="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
+    <div class="lb-bar">
+      <p class="lb-label"><span class="lb-title"></span> <span class="lb-count"></span></p>
+      <button type="button" class="ds-arrow lb-close" aria-label="Close"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button>
+    </div>
+    <div class="lb-stage">
+      <button type="button" class="ds-arrow lb-prev" aria-label="Previous image"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H3M7 4 3 8l4 4"/></svg></button>
+      <figure class="lb-frame"><img class="lb-img" alt=""></figure>
+      <button type="button" class="ds-arrow lb-next" aria-label="Next image"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Section index -->
+  <nav class="index" aria-label="Case study sections">
+    <a href="#overview"><span>01</span> Overview</a>
+    <a href="#problem"><span>02</span> Problem</a>
+    <a href="#user-problems"><span>03</span> User problems</a>
+    <a href="#goals"><span>04</span> Goals</a>
+    <a href="#iteration-1"><span>05</span> Iteration 1</a>
+    <a href="#iteration-2"><span>06</span> Iteration 2</a>
+    <a href="#impact"><span>07</span> Impact</a>
+    <a href="#prototype"><span>08</span> Prototype</a>
+  </nav>
+  <script src="../../site-menu.js?v=r1" defer></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+/* the screen: the window's height, the header, the contact column, the footer. On wide screens sizes follow
+   --u, one hundredth of the width or 1.6 hundredths of the height, whichever is smaller, so short windows
+   scale down instead of scrolling. Also the home page's last section (index.html). */
+.contact-screen { position: relative; display: flex; flex-direction: column; min-height: 100vh; overflow: clip; }
+@media (min-width: 900px) {
+  .contact-screen {
+    --u: min(1vw, 1.6vh);
+    --t-heading: clamp(20px, calc(var(--u) * 2.2), 32px);
+    --t-body: clamp(14px, calc(var(--u) * 1.25), 18px);
+  }
+}
+
+/* Contact: one screen. The pixel @, the line, a message field written straight onto the page, LinkedIn,
+   then the footer. The column spans the two middle grid columns, centred on the window. */
+.contact {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: clamp(24px, calc(var(--u, 1vw) * 4), 72px) var(--pad);
+  border-left: 1px solid var(--frame); border-right: 1px solid var(--frame);
+}
+.at { display: block; width: clamp(96px, min(16vw, 20vh), 260px); height: auto; }
+
+.msg { width: min(100%, calc(var(--col) * 2)); margin-top: clamp(40px, calc(var(--u, 1vw) * 6), 112px); }
+.contact-title { margin: 0; font-size: var(--t-heading); font-weight: 500; line-height: 1.25; letter-spacing: -0.02em; color: var(--text-soft); } /* the case studies' lead style */
+.contact-title label { cursor: text; }
+/* the line steps aside once the visitor starts writing: the message takes the stage */
+.contact-title { transition: opacity .3s, transform .4s var(--ease); }
+.msg.has-text .contact-title { opacity: 0; transform: translateY(-6px); }
+
+/* the field: big type on a single rule; the rule turns blue while you write */
+.msg-field { position: relative; display: flex; align-items: flex-end; margin-top: clamp(24px, calc(var(--u, 1vw) * 4), 64px);
+  border-bottom: 1px solid #2E2F33; transition: border-color .25s; }
+.msg-field:focus-within { border-bottom-color: var(--accent-solid); }
+.msg-field textarea {
+  flex: 1; min-width: 0; display: block; margin: 0; padding: 0 0 .22em; border: 0; outline: 0; resize: none; overflow: hidden;
+  background: none; color: var(--text); font: inherit; font-size: clamp(34px, calc(var(--u, 1vw) * 4.6), 80px); font-weight: 400;
+  line-height: 1.15; letter-spacing: -0.025em; caret-color: var(--accent-solid);
+  max-height: 8.5em;
+}
+/* past one line the message steps down to reading size, and scrolls after a few lines, so the page holds */
+.msg.long .msg-field textarea { font-size: clamp(20px, calc(var(--u, 1vw) * 1.9), 30px); line-height: 1.45; letter-spacing: -0.01em; max-height: 7.5em; overflow-y: auto; }
+.msg.has-text .msg-field textarea { padding-right: calc(clamp(48px, calc(var(--u, 1vw) * 4.4), 72px) + 16px); }
+.msg-field textarea::placeholder { color: #3A3B40; opacity: 1; }
+
+/* send: the blue square from the case-study preview; it appears once there's something to send */
+.msg-send {
+  position: absolute; right: 0; bottom: 12px; display: grid; place-items: center; width: clamp(48px, calc(var(--u, 1vw) * 4.4), 72px); aspect-ratio: 1;
+  border: 0; padding: 0; background: var(--accent); color: #fff; cursor: pointer;
+  opacity: 0; transform: translateY(6px); pointer-events: none; transition: opacity .25s, transform .35s var(--ease);
+}
+.msg.has-text .msg-send { opacity: 1; transform: none; pointer-events: auto; }
+.msg-send svg { width: 40%; height: 40%; fill: none; stroke: currentColor; stroke-width: 1.5; transition: transform .3s var(--ease); }
+.msg-send:hover svg, .msg-send:focus-visible svg { transform: translate(2px, -2px); }
+.msg-send:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent-solid); outline-offset: 3px; }
+
+.msg-or { display: flex; align-items: center; gap: 12px; margin: clamp(24px, calc(var(--u, 1vw) * 3), 40px) 0 0; font-size: var(--t-body); line-height: 1.5; color: var(--text-2); }
+/* LinkedIn: a pill in LinkedIn's own blue, so it reads as theirs at a glance */
+.chip { display: inline-flex; align-items: center; padding: .42em 1em; border-radius: 999px; background: #0A66C2; color: #fff; font-weight: 400; line-height: 1.2; text-decoration: none; transition: background .2s; }
+.chip:hover { background: #004182; }
+
+.contact-foot { padding: clamp(20px, calc(var(--u, 1vw) * 2.4), 36px) var(--pad); border: 1px solid var(--frame); border-bottom: 0; }
+.contact-foot p { margin: 0; font-size: var(--t-label); color: var(--text-2); }
+
+@media (max-width: 899px) {
+  .contact { padding-top: 48px; padding-bottom: 56px; }
+  .msg { width: 100%; margin-top: 56px; }
+  .msg-field textarea { font-size: 26px; } /* the prompt a size smaller on phones */
+  .msg.long .msg-field textarea { font-size: 20px; }
+  .msg-send { bottom: 8px; }
+}

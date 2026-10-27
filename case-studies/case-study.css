@@ -1,0 +1,2972 @@
+/* Case study, divider style (cs1v1.5). Tokens live in /styles.css.
+   No background grid: structure comes from real dividers only. Each section is a framed panel that fills
+   one screen, so a single scroll snaps cleanly from one section to the next. Layout runs on 3 columns. */
+
+:root {
+  --frame: var(--stroke);
+  --ghost-2: #1D1F22;
+  --text-body: #B8B9BC; /* descriptions: a step lighter than --text-2, so long passages read easily */
+  --sticky-h: 0px;
+
+  /* Type scale: one size per role */
+  --t-display: clamp(40px, 5vw, 84px);
+  --t-heading: clamp(24px, 2.2vw, 32px);
+  --t-section: clamp(18px, 1.5vw, 22px);
+  --t-lead: clamp(18px, 1.5vw, 22px);
+  --t-body: clamp(16px, 1.25vw, 18px);
+  --t-label: 13px;
+  --gap-detail: clamp(16px, 1.6vw, 24px); /* headline to its detail text */
+  --text-soft: #D9DADD; /* long white passages, a step below headings */
+}
+
+
+.page {
+  padding: 0 var(--gutter);
+}
+
+/* ---------- shared ---------- */
+
+.lede {
+  margin: 0;
+  max-width: 46ch;
+  font-size: var(--t-lead);
+  line-height: 1.4;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.lede strong {
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* An abbreviation explained on hover or focus: blue gradient text with a matching underline and a tooltip */
+.term {
+  position: relative;
+  z-index: 2;
+  font-weight: 500;
+  cursor: help;
+  outline: none;
+}
+
+.term::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: linear-gradient(90deg, #6BABFF, #0051FF);
+}
+
+.term .tip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  padding: 8px 12px;
+  border: 1px solid var(--stroke);
+  background: #1E1F22;
+  font-size: var(--t-label);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0;
+  text-align: left;
+  width: max-content;
+  max-width: min(280px, 80vw); /* longer explanations wrap */
+  color: var(--text);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 4px);
+  transition: opacity .2s, transform .2s var(--ease), visibility .2s;
+}
+
+.term:hover .tip,
+.term:focus-visible .tip,
+.term:focus .tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+.term:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* a term reads in white; the gradient lives in its underline (and in the person icon's line, not its fill) */
+.term,
+.term .accent {
+  color: var(--text);
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* terms at the start of a line open their tooltip from the left edge, so it never runs off the page */
+.term .tip-start {
+  left: 0;
+  transform: translateY(4px);
+}
+
+.term:hover .tip-start,
+.term:focus-visible .tip-start,
+.term:focus .tip-start {
+  transform: none;
+}
+
+/* a person (persona): a small user icon; the underline runs under icon and word together, as under every
+   other term */
+.persona-ic {
+  display: inline-block;
+  width: .9em;
+  height: .9em;
+  margin-right: .28em;
+  vertical-align: -.1em;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='7.5' r='4.5'/%3E%3Cpath d='M12 14c-4.4 0-8 2.2-8 5v1.5c0 .8.7 1.5 1.5 1.5h13c.8 0 1.5-.7 1.5-1.5V19c0-2.8-3.6-5-8-5z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='7.5' r='4.5'/%3E%3Cpath d='M12 14c-4.4 0-8 2.2-8 5v1.5c0 .8.7 1.5 1.5 1.5h13c.8 0 1.5-.7 1.5-1.5V19c0-2.8-3.6-5-8-5z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.accent {
+  background: var(--accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.m-label {
+  display: none;
+}
+
+/* Framed panel: outer frame on the gutters, a top rule closes each section off */
+.panel {
+  position: relative;
+  border-left: 1px solid var(--frame);
+  border-right: 1px solid var(--frame);
+  border-top: 1px solid var(--frame);
+}
+
+/* Section header: large faint word behind a strong label */
+.sec-head {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(110px, 10vw, 160px);
+  padding: 0 var(--pad) clamp(18px, 1.8vw, 28px);
+  overflow: hidden;
+}
+
+.ghost {
+  position: absolute;
+  left: calc(var(--pad) - .04em);
+  bottom: clamp(4px, .6vw, 10px);
+  font-size: clamp(72px, 8.4vw, 140px);
+  font-weight: 700;
+  line-height: .8;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+  color: var(--ghost-2);
+  pointer-events: none;
+  user-select: none;
+}
+
+.sec-title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  font-size: var(--t-section);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+/* One square per challenge; the active one turns blue */
+.count {
+  display: inline-flex;
+  gap: 6px;
+  align-self: flex-end;
+  margin-bottom: 2px;
+}
+
+.count i {
+  width: 9px;
+  height: 9px;
+  background: var(--text);
+  opacity: .35;
+  transition: opacity .3s, background .3s;
+}
+
+.count i.on {
+  background: var(--accent-solid);
+  opacity: 1;
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* full-bleed screen across the top, edge to edge */
+.hero-shot {
+  flex: 1 1 auto;
+  min-height: 34vh;
+  max-height: 46vh;
+  margin: 0 calc(var(--gutter) * -1);
+  background: var(--surface);
+}
+
+/* Three laptops composed in the container. Sizes follow the page width, so the outer edges of the side
+   laptops always sit exactly on the left and right frame lines. The centre laptop is in front and larger;
+   the side ones are smaller and set back. All three are cut off by the bottom of the container.
+   The numbers come from the image files: each laptop body is 1567px wide (1008px tall to the cut), starting
+   83px in on the centre and left images and 3px in on the right one, 43px from the top. */
+.hero-shot {
+  --F: calc(100vw - 2 * var(--gutter)); /* frame width */
+  --bc: calc(var(--F) * .52);            /* centre laptop body width */
+  --bs: calc(var(--bc) * .73);           /* side laptop body width */
+  --t: 7%;                               /* centre laptop top */
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-comp {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-comp img {
+  position: absolute;
+  display: block;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.hc-center {
+  z-index: 2;
+  left: calc(50% - var(--bc) / 2 - var(--bc) * 83 / 1567);
+  top: calc(var(--t) - var(--bc) * 43 / 1567);
+  width: calc(var(--bc) * 1733 / 1567);
+}
+
+.hc-left,
+.hc-right {
+  top: calc(var(--t) + var(--bc) * 1008 / 1567 * .27 - var(--bs) * 43 / 1567);
+  width: calc(var(--bs) * 1653 / 1567);
+}
+
+.hc-left {
+  left: calc(var(--gutter) - var(--bs) * 83 / 1567);
+}
+
+.hc-right {
+  left: calc(100% - var(--gutter) - var(--bs) - var(--bs) * 3 / 1567);
+}
+
+.hero-body {
+  padding: clamp(28px, 3.2vw, 52px) var(--pad) clamp(28px, 3vw, 48px);
+  border-left: 1px solid var(--frame);
+  border-right: 1px solid var(--frame);
+}
+
+.hero h1 {
+  margin: 0 0 clamp(14px, 1.4vw, 22px);
+  font-size: var(--t-display);
+  font-weight: 650;
+  line-height: 1.1; /* room between lines when the title wraps, still tight enough to read as one block */
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.hero .lede {
+  max-width: 60ch;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  border: 1px solid var(--frame);
+}
+
+.facts > div {
+  padding: clamp(16px, 1.6vw, 24px) var(--pad) clamp(22px, 2.2vw, 34px);
+}
+
+.facts > div + div {
+  border-left: 1px solid var(--frame);
+}
+
+.facts dt {
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.facts dd {
+  margin: 10px 0 0;
+  max-width: 30ch;
+  font-size: var(--t-body);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* ---------- the problem ---------- */
+
+.problem {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin-top: clamp(48px, 5vw, 80px);
+}
+
+.problem > .lede {
+  padding: clamp(20px, 2vw, 32px) var(--pad) clamp(32px, 3.4vw, 56px);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--frame);
+  border-bottom: 1px solid var(--frame);
+}
+
+.card {
+  padding: clamp(28px, 3vw, 48px) var(--pad) clamp(36px, 4vw, 64px);
+}
+
+.card + .card {
+  border-left: 1px solid var(--frame);
+}
+
+.card h3 {
+  width: max-content;
+  max-width: 100%;
+  margin: 0 0 clamp(12px, 1.2vw, 18px);
+  font-size: var(--t-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+}
+
+.card p {
+  margin: 0;
+  max-width: 46ch;
+  font-size: var(--t-body);
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+/* ---------- project challenges ---------- */
+
+.challenges {
+  margin-top: clamp(48px, 5vw, 80px);
+  border-bottom: 1px solid var(--frame);
+}
+
+/* the section title stays pinned while challenges snap underneath */
+/* the title and the CHALLENGE / HOW WE APPROACHED IT row pin together, so the rule under the labels
+   is always visible while challenges snap underneath */
+.pin {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+}
+
+.ch-labels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--frame);
+}
+
+.ch-labels span {
+  padding: 0 var(--pad) clamp(14px, 1.4vw, 20px);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+/* Text columns: each challenge fills the screen below the pinned title and snaps into place.
+   Centre column: one continuous image strip spanning both challenges, scrolling with the page. */
+.ch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: minmax(calc(100vh - var(--sticky-h)), auto);
+}
+
+.ch-text.r1, .ch-approach.r1 { grid-row: 1; }
+.ch-text.r2, .ch-approach.r2 { grid-row: 2; }
+.ch-text { grid-column: 1; }
+.ch-approach { grid-column: 3; }
+
+
+.m-media {
+  display: none;
+}
+
+.ch-text,
+.ch-approach {
+  padding: clamp(32px, 3.4vw, 56px) var(--pad);
+}
+
+.ch-text {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: clamp(14px, 1.4vw, 22px);
+  align-content: start;
+}
+
+.ch-text .num {
+  grid-row: 1;
+  font-size: clamp(56px, 5vw, 84px);
+  font-weight: 600;
+  line-height: .8;
+  letter-spacing: -0.04em;
+}
+
+.ch-text h3 {
+  grid-row: 1;
+  align-self: end;
+  margin: 0;
+  font-size: var(--t-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.ch-text p {
+  grid-column: 1 / -1;
+  margin: var(--gap-detail) 0 0;
+  max-width: 40ch;
+  font-size: var(--t-body);
+  line-height: 1.5;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.ch-approach p {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--text-soft);
+  text-wrap: pretty;
+}
+
+/* the strip spans both challenge rows with one even gap, so it reads as a single continuous column
+   (images never regroup to the top of the screen at each snap) */
+.ch-media {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: grid;
+  align-content: start;
+  gap: clamp(16px, 1.6vw, 24px);
+  padding: clamp(32px, 3.4vw, 56px) 0;
+  border-left: 1px solid var(--frame);
+  border-right: 1px solid var(--frame);
+}
+
+.shot {
+  margin: 0 clamp(16px, 1.6vw, 24px);
+  aspect-ratio: 1.55;
+  background: var(--surface);
+}
+
+/* ---------- problems & solutions ----------
+   Pinned title + squares; each solution fills the screen and snaps. Layout per solution follows the
+   reference: (1) screen under the solution, impact beside it; (2) impact under the solution, tall screen
+   on the right; (3) impact top right, wide screen across solution + impact. Each column keeps its label. */
+
+.solutions {
+  margin-top: clamp(48px, 5vw, 80px);
+  border-bottom: 1px solid var(--frame);
+}
+
+.sol-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto 1fr;
+  min-height: calc(100vh - var(--sticky-h));
+  border-top: 1px solid var(--frame);
+}
+
+.sol-row.v1 { grid-template-areas: "prob sol ." "prob shot imp"; }
+.sol-row.v2 { grid-template-areas: "prob sol shot" "prob imp shot"; }
+.sol-row.v3 { grid-template-areas: "prob sol imp" "prob shot shot"; }
+
+.sol-problem { grid-area: prob; }
+.sol-solution { grid-area: sol; }
+.sol-impact { grid-area: imp; }
+.sol-shot { grid-area: shot; }
+
+.sol-label {
+  display: block;
+  margin-bottom: clamp(16px, 1.6vw, 22px);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.sol-problem .sol-label {
+  grid-column: 1 / -1;
+}
+
+.sol-problem,
+.sol-solution,
+.sol-impact {
+  padding: clamp(32px, 3.4vw, 56px) var(--pad) 0;
+}
+
+.sol-problem {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto 1fr;
+  column-gap: clamp(14px, 1.4vw, 22px);
+  align-content: start;
+  border-right: 1px solid var(--frame);
+}
+
+.sol-problem .num {
+  grid-row: 2;
+  font-size: clamp(56px, 5vw, 84px);
+  font-weight: 600;
+  line-height: .8;
+  letter-spacing: -0.04em;
+}
+
+.sol-problem h3 {
+  grid-row: 2;
+  align-self: end;
+}
+
+.sol-problem p {
+  grid-column: 1 / -1;
+  grid-row: 3;
+}
+
+.sol-problem h3,
+.sol-solution h3 {
+  margin: 0;
+  font-size: var(--t-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.sol-problem p,
+.sol-solution p {
+  margin: var(--gap-detail) 0 0;
+  max-width: 40ch;
+  font-size: var(--t-body);
+  line-height: 1.5;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.v1 .sol-impact {
+  padding-top: clamp(24px, 2.4vw, 36px);
+}
+
+.sol-impact ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sol-impact li {
+  position: relative;
+  padding: 0 0 14px 22px;
+  font-size: var(--t-lead);
+  line-height: 1.4;
+  color: var(--text-soft);
+}
+
+.sol-impact li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .62em;
+  width: 10px;
+  height: 2px;
+  background: var(--accent-solid);
+}
+
+.sol-shot {
+  margin: 0;
+  padding: clamp(24px, 2.4vw, 36px) var(--pad) clamp(64px, 7vw, 96px); /* room for the floating menu */
+}
+
+.sol-shot .shot {
+  margin: 0;
+}
+
+.v1 .sol-shot .shot { aspect-ratio: 1.15 / 1; }
+.v2 .sol-shot { padding-top: clamp(32px, 3.4vw, 56px); }
+.v2 .sol-shot .shot { aspect-ratio: 3 / 4; }
+.v3 .sol-shot .shot { aspect-ratio: 2.4 / 1; }
+
+.sol-shot figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+  font-size: var(--t-label);
+  color: var(--text-2);
+}
+
+.thumbs {
+  display: flex;
+  gap: 8px;
+}
+
+/* thumbnails of the screens in a solution; the current one is outlined, the others dimmed */
+.thumb {
+  display: block;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: var(--surface);
+  cursor: pointer;
+  opacity: .45;
+  transition: opacity .2s;
+}
+
+.thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb:hover,
+.thumb.on {
+  opacity: 1;
+}
+
+.thumb.on {
+  outline: 1px solid var(--text);
+  outline-offset: 3px;
+}
+
+.thumb:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* the screens of a solution, stacked; the current one fades in, shown whole inside its container */
+.sol-view {
+  --ip: clamp(10px, 1vw, 16px);
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  cursor: zoom-in;
+}
+
+.sol-view img {
+  position: absolute;
+  top: var(--ip);
+  left: var(--ip);
+  display: block;
+  width: calc(100% - 2 * var(--ip));
+  height: calc(100% - 2 * var(--ip));
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity .35s var(--ease);
+}
+
+.sol-view img.on {
+  opacity: 1;
+}
+
+/* Device screens that are cut off in the image itself run to the container's edge on the cut sides, so the
+   cut lines up with the container instead of floating inside it. --cut (image height / height to the cut)
+   pushes the soft shadow under the cut out of view. */
+.sol-view {
+  overflow: hidden;
+}
+
+.sol-view img[data-bleed] {
+  height: calc((100% - var(--ip)) * var(--cut));
+}
+
+.sol-view img[data-bleed="rb"] {   /* cut on the right and bottom */
+  width: calc(100% - var(--ip));
+  object-position: right bottom;
+}
+
+.sol-view img[data-bleed="lb"] {   /* cut on the left and bottom */
+  left: 0;
+  width: calc(100% - var(--ip));
+  object-position: left bottom;
+}
+
+.sol-view img[data-bleed="b"] {    /* cut at the bottom */
+  object-position: center bottom;
+}
+
+.sol-view:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* ---------- project impact ----------
+   Closing section, one screen: a lead sentence, then three outcomes side by side. No figures. */
+
+.impact {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin-top: clamp(48px, 5vw, 80px);
+  border-bottom: 1px solid var(--frame);
+}
+
+.impact-lead {
+  margin: 0;
+  padding: clamp(20px, 2vw, 32px) var(--pad) clamp(40px, 4.4vw, 72px);
+  max-width: 34ch;
+  font-size: var(--t-heading);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--text-2);
+  text-wrap: balance;
+}
+
+.impact-lead strong {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.outcomes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--frame);
+  border-bottom: 1px solid var(--frame);
+}
+
+.outcome {
+  padding: clamp(28px, 3vw, 48px) var(--pad) clamp(36px, 4vw, 64px);
+}
+
+.outcome + .outcome {
+  border-left: 1px solid var(--frame);
+}
+
+.tick {
+  display: block;
+  width: 24px;
+  height: 3px;
+  margin-bottom: clamp(20px, 2vw, 28px);
+  background: var(--accent);
+}
+
+.outcome h3 {
+  margin: 0;
+  font-size: var(--t-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+}
+
+.outcome p {
+  margin: var(--gap-detail) 0 0;
+  max-width: 40ch;
+  font-size: var(--t-body);
+  line-height: 1.5;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.to-top {
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.to-top:hover,
+.to-top:focus-visible {
+  color: var(--text);
+}
+
+/* ---------- section index ---------- */
+
+.index {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(16px, 2vw, 28px);
+  z-index: 20;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--stroke);
+  background: rgba(18, 19, 21, .82);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transform: translateX(-50%);
+}
+
+.index a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color .2s, background .2s;
+}
+
+.index a span {
+  opacity: .6;
+  font-variant-numeric: tabular-nums;
+}
+
+.index a:hover {
+  color: var(--text);
+}
+
+.index a[aria-current="true"] {
+  color: var(--text);
+  background: #1E1F22;
+}
+
+.index a[aria-current="true"] span {
+  opacity: 1;
+  background: var(--accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.index a:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: -2px;
+}
+
+/* ---------- tablet & phone: one column, normal scrolling ---------- */
+
+@media (max-width: 899px) {
+  .hero,
+  .problem {
+    min-height: 0;
+  }
+
+  /* phones: the container is just tall enough to show most of the centre laptop */
+  .hero-shot {
+    flex: none;
+    height: calc(var(--bc) * 1008 / 1567 * .92);
+    min-height: 0;
+  }
+
+  .facts,
+  .cards,
+  .ch-labels,
+  .ch-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts > div + div,
+  .card + .card {
+    border-left: 0;
+    border-top: 1px solid var(--frame);
+  }
+
+  .pin {
+    position: relative;
+  }
+
+  .ch-labels {
+    display: none;
+  }
+
+  .ch-grid {
+    grid-auto-rows: auto;
+  }
+
+  .ch-grid > * {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
+
+  /* phones: each challenge shows its own images inline instead of the shared strip */
+  .ch-media {
+    display: none;
+  }
+
+  .m-media {
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .m-media .shot {
+    margin: 0;
+  }
+
+  .ch-approach {
+    padding-top: 0;
+  }
+
+  .sol-row.v1,
+  .sol-row.v2,
+  .sol-row.v3 {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "prob" "sol" "shot" "imp";
+    min-height: 0;
+  }
+
+  .sol-shot .shot {
+    aspect-ratio: 16 / 10;
+  }
+
+  /* each container takes the shape of its screens, so they show as large as the width allows */
+  .v2 .sol-shot .shot {
+    aspect-ratio: 3 / 4;
+  }
+
+  .v3 .sol-shot .shot {
+    aspect-ratio: 2 / 1;
+  }
+
+  .sol-shot,
+  .v2 .sol-shot {
+    padding: 20px var(--pad) 0;
+  }
+
+  .sol-problem {
+    border-right: 0;
+  }
+
+  .sol-impact {
+    padding-bottom: 24px;
+  }
+
+  .impact {
+    min-height: 0;
+  }
+
+  .outcomes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .outcome + .outcome {
+    border-left: 0;
+    border-top: 1px solid var(--frame);
+  }
+
+  .m-label {
+    display: block;
+    margin-bottom: 12px;
+    font-size: var(--t-label);
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .index a {
+    padding: 10px;
+  }
+
+  .index a:not([aria-current="true"]) {
+    gap: 0;
+    font-size: 0;
+  }
+
+  .index a span {
+    font-size: 13px;
+  }
+}
+
+/* ---------- one continuous frame ----------
+   The outer frame lines run the full length of the page, through the gaps between sections, so the
+   sections read as one structure rather than separate boxes. Each section is closed off by the next
+   section's top rule, so there are no doubled horizontal lines in the gaps. */
+.page {
+  position: relative;
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--gutter);
+  right: var(--gutter);
+  border-left: 1px solid var(--frame);
+  border-right: 1px solid var(--frame);
+  pointer-events: none;
+}
+
+.hero-shot {
+  position: relative;
+  z-index: 1;
+}
+
+.challenges,
+.solutions {
+  border-bottom: 0;
+}
+
+/* ---------- product designs ----------
+   Shorter than a screen, so the start of the footer shows below it. Screens sit in a horizontal strip
+   that runs off the right edge of the page;
+   drag it with the mouse or use the arrows, and the squares by the title track the current screen. */
+.impact {
+  border-bottom: 0;
+}
+
+.designs {
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(48px, 5vw, 80px);
+  border-bottom: 1px solid var(--frame);
+}
+
+.designs .sec-head {
+  justify-content: space-between;
+}
+
+/* previous / next arrows: they tell you the strip moves sideways, and move it one screen per click */
+.ds-arrows {
+  position: relative;
+  display: flex;
+  gap: 8px;
+}
+
+.ds-arrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--stroke);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background .2s, border-color .2s, opacity .2s;
+}
+
+.ds-arrow svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+.ds-arrow:hover:not(:disabled) {
+  background: #1E1F22; /* the section menu's highlight */
+}
+
+.ds-arrow:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.ds-arrow:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+/* the arrows sit at the right end of the header, centred on the title line */
+.ds-head-end {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 2vw, 32px);
+  margin-bottom: -11px;
+}
+
+/* the viewport runs from the left frame to the right edge of the window, so the next screen peeks in */
+.ds-viewport {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  margin-right: calc(-1 * var(--gutter) - 1px);
+  /* the rule under the header, drawn here so the title sits exactly where it does in the other sections;
+     it stops at the right frame even though the strip runs on to the window edge */
+  background: linear-gradient(var(--frame), var(--frame)) 0 0 / calc(100% - var(--gutter) - 1px) 1px no-repeat;
+  overflow: hidden;
+}
+
+/* phones only: the arrows under the strip */
+.ds-end {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ds-strip {
+  --ds-w: calc((100vw - 2 * var(--gutter)) * .45); /* two screens and the edge of a third in view */
+  display: flex;
+  gap: var(--pad);
+  padding: clamp(32px, 3.4vw, 56px) var(--pad); /* same inset as the other sections' content */
+  transition: transform .85s var(--ease);
+}
+
+/* desktop: the strip can be dragged sideways with the mouse */
+@media (min-width: 900px) {
+  .ds-viewport {
+    cursor: grab;
+    touch-action: pan-y; /* vertical swipes still scroll the page */
+    user-select: none;
+  }
+
+  .ds-viewport.is-dragging {
+    cursor: grabbing;
+  }
+}
+
+/* each product screen fills its container edge to edge (the screens are full-window captures, so the
+   container takes their exact shape), with its label above */
+.ds-fig {
+  flex: 0 0 var(--ds-w);
+  margin: 0;
+}
+
+.ds-view {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1512 / 982;
+  padding: 0;
+  border: 0;
+  background: var(--surface);
+  cursor: inherit; /* desktop: the strip's grab cursor */
+}
+
+.ds-view img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.ds-view:hover .zoom-ic,
+.ds-view:focus-visible .zoom-ic {
+  opacity: 1;
+  transform: none;
+}
+
+.ds-view:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* label above the screen, left, as on the solution screens */
+.ds-fig figcaption {
+  margin-bottom: 14px;
+  font-size: var(--t-label);
+  line-height: 1.3;
+  color: var(--text-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-strip { transition: none; }
+}
+
+@media (max-width: 899px) {
+  .designs {
+    min-height: 0;
+  }
+
+  /* phones: swipe the strip sideways, one screen at a time */
+  .ds-viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .ds-viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ds-strip {
+    --ds-w: 82vw;
+    gap: 12px;
+    width: max-content;
+  }
+
+  .ds-fig {
+    scroll-snap-align: start;
+    scroll-margin-left: var(--pad);
+  }
+
+  .ds-viewport {
+    display: block;
+    padding-bottom: 0;
+  }
+
+  .ds-strip {
+    padding-bottom: var(--pad);
+  }
+
+  /* phones: the arrows move under the strip */
+  .ds-head-end {
+    display: none;
+  }
+
+  .ds-end {
+    display: flex;
+    justify-content: flex-end;
+    padding: 4px var(--pad) clamp(40px, 10vw, 56px);
+  }
+}
+
+/* ---------- site footer ----------
+   Links on the left; two other projects across the remaining two columns; copyright underneath. */
+.site-foot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* one screen, so the last snap lands on the footer's top like every other section */
+  margin-top: clamp(48px, 5vw, 80px);
+  border: 1px solid var(--frame);
+  border-bottom: 0;
+}
+
+.sf-main {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--frame);
+}
+
+.sf-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(24px, 2.4vw, 36px);
+  padding: clamp(32px, 3.4vw, 56px) var(--pad);
+}
+
+.sf-links a,
+.sf-head {
+  font-size: var(--t-section);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.sf-links a {
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.sf-links a:hover,
+.sf-links a:focus-visible {
+  color: var(--text);
+}
+
+.sf-links a:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 4px;
+}
+
+.sf-links .to-top span {
+  display: inline-block;
+  margin-left: 6px;
+  transition: transform .3s var(--ease);
+}
+
+.sf-links .to-top:hover span {
+  transform: translateY(-3px);
+}
+
+/* the two projects share one heading, so the grid spans both columns; the line between the two columns
+   runs the full height of the footer, as the column lines do elsewhere */
+.sf-projects {
+  grid-column: 2 / span 2;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: auto 1fr;
+  background: linear-gradient(var(--frame), var(--frame)) 50% 0 / 1px 100% no-repeat;
+}
+
+.sf-head {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: clamp(32px, 3.4vw, 56px) var(--pad) clamp(28px, 2.8vw, 44px);
+  color: var(--text);
+}
+
+.op-card {
+  display: block;
+  padding: 0 var(--pad) clamp(40px, 4vw, 64px);
+  color: inherit;
+  text-decoration: none;
+}
+
+.sf-projects {
+  border-left: 1px solid var(--frame);
+}
+
+.op-card .shot {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 clamp(20px, 2vw, 28px);
+  aspect-ratio: 16 / 9; /* same shape as the product design screens */
+}
+
+/* the project's opening screen: its laptop, centred and cut off by the bottom, as on the home preview;
+   on hover it rises a little and the arrow lifts towards the corner */
+.op-card .shot img {
+  position: absolute;
+  left: 50%;
+  top: 12%;
+  width: 80%;
+  height: auto;
+  transform: translateX(-50%);
+  transition: transform .5s var(--ease);
+}
+
+.op-card .op-gifa img { width: 88%; } /* this shot has more margin round its laptop */
+.op-card:hover .shot img,
+.op-card:focus-visible .shot img { transform: translate(-50%, -4%); }
+
+.op-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.op-arrow {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: .25em;
+  fill: none;
+  stroke: var(--text-2);
+  stroke-width: 1.5;
+  transition: transform .3s var(--ease), stroke .2s;
+}
+
+.op-card:hover .op-arrow,
+.op-card:focus-visible .op-arrow { stroke: var(--text); transform: translate(2px, -2px); }
+.op-card:focus-visible { outline: 2px solid var(--text); outline-offset: -2px; }
+
+.op-card h3 {
+  margin: 0;
+  font-size: var(--t-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.op-card p {
+  margin: var(--gap-detail) 0 0;
+  max-width: 40ch;
+  font-size: var(--t-body);
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+.sf-copy {
+  margin: 0;
+  padding: clamp(28px, 2.8vw, 40px) var(--pad) clamp(88px, 8vw, 112px); /* clear of the floating menu */
+  font-size: var(--t-label);
+  color: var(--text-2);
+}
+
+.designs {
+  border-bottom: 0;
+}
+
+@media (max-width: 899px) {
+  .site-foot {
+    min-height: 0;
+  }
+
+  .sf-main,
+  .sf-projects {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sf-projects {
+    grid-column: auto;
+    border-left: 0;
+    border-top: 1px solid var(--frame);
+  }
+
+  .sf-projects {
+    background: none;
+  }
+
+  .sf-links {
+    padding: 48px var(--pad);
+  }
+
+  .sf-head {
+    padding-top: 48px;
+  }
+}
+
+/* ---------- challenge images ----------
+   Each image sits whole inside its container (nothing is cropped). The label sits inside the container,
+   top left, so the containers keep their size and the challenges still fit the screen. Hover or focus shows
+   a zoom button; clicking opens the image viewer. */
+.ch-fig {
+  position: relative;
+  margin: 0 clamp(16px, 1.6vw, 24px);
+}
+
+.ch-fig figcaption {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  right: 56px;
+  z-index: 1;
+  font-size: var(--t-label);
+  font-weight: 500;
+  line-height: 1.3;
+  color: #5F6267; /* dark grey on the light container (6:1 contrast) */
+  pointer-events: none;
+}
+
+.zoom {
+  --ip: clamp(10px, 1vw, 16px); /* inset around the image; the top leaves room for the label */
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.55;
+  padding: 0;
+  border: 0;
+  background: var(--surface);
+  cursor: zoom-in;
+}
+
+/* placed absolutely so a tall image can never stretch its container */
+.zoom img {
+  position: absolute;
+  top: 40px;
+  left: var(--ip);
+  display: block;
+  width: calc(100% - 2 * var(--ip));
+  height: calc(100% - 40px - var(--ip));
+  object-fit: contain;
+}
+
+.zoom-ic {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(18, 19, 21, .82);
+  color: var(--text);
+  opacity: 0;
+  transform: scale(.9);
+  transition: opacity .2s, transform .2s var(--ease);
+}
+
+.zoom-ic svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+.zoom:hover .zoom-ic,
+.zoom:focus-visible .zoom-ic,
+.sol-view:hover .zoom-ic,
+.sol-view:focus-visible .zoom-ic {
+  opacity: 1;
+  transform: none;
+}
+
+.zoom:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* touch screens have no hover, so the zoom button always shows */
+@media (hover: none) {
+  .zoom-ic {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- image viewer ----------
+   The image fills the window: full height on landscape screens, full width on portrait phones. The label,
+   position, close button and arrows float over it on small dark plates, so they never take space from it.
+   Arrows are the same buttons as the Product designs strip. */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(18, 19, 21, .96);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  animation: lb-in .25s var(--ease);
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+@keyframes lb-in {
+  from { opacity: 0; }
+}
+
+.lb-stage,
+.lb-frame {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+}
+
+.lb-img {
+  display: block;
+  max-width: 100vw;
+  max-height: 100vh;
+  max-height: 100dvh; /* phones: the visible height, without the browser bars */
+  background: var(--surface); /* transparent diagrams stay readable */
+  object-fit: contain;
+  animation: lb-in .3s var(--ease);
+}
+
+.lb-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: clamp(12px, 1.6vw, 24px);
+  pointer-events: none; /* clicks pass through to the backdrop, except on the controls */
+}
+
+.lb-bar > *,
+.lb-prev,
+.lb-next {
+  pointer-events: auto;
+}
+
+.lb-label {
+  margin: 0;
+  padding: 12px 14px;
+  background: rgba(18, 19, 21, .86);
+  font-size: var(--t-label);
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.lb-count {
+  margin-left: 10px;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.lightbox .ds-arrow {
+  border-color: rgba(255, 255, 255, .08);
+  background: rgba(18, 19, 21, .86);
+}
+
+.lightbox .ds-arrow:hover {
+  background: #1E1F22;
+}
+
+.lb-prev,
+.lb-next {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+}
+
+.lb-prev { left: clamp(12px, 1.6vw, 24px); }
+.lb-next { right: clamp(12px, 1.6vw, 24px); }
+
+html.lb-open {
+  overflow: hidden;
+}
+
+@media (max-width: 899px) {
+  .ch-fig {
+    margin: 0;
+  }
+
+  /* phones: the arrows sit at the bottom corners, clear of the image */
+  .lb-prev,
+  .lb-next {
+    top: auto;
+    bottom: 24px;
+    transform: none;
+  }
+}
+
+
+/* ---------- layouts added for the fee management case study ----------
+   Built only from the tokens and parts above, so the two case studies read as one system. */
+
+/* one wide image under a section's lead, closed off by a rule above it (as the problem cards are) */
+.wide-shot {
+  padding: clamp(32px, 3.4vw, 56px) var(--pad);
+  border-top: 1px solid var(--frame);
+}
+
+.wide-shot .ch-fig {
+  margin: 0;
+}
+
+.wide-shot .zoom {
+  aspect-ratio: 2.6;
+}
+
+/* a strip of screens with a lead above it: the rule moves from the strip to under the header */
+.evaluation {
+  border-bottom: 0;
+}
+
+.evaluation .sec-head {
+  border-bottom: 1px solid var(--frame);
+}
+
+.evaluation .ds-viewport {
+  background: none;
+}
+
+.ds-lede {
+  max-width: calc(46ch + 2 * var(--pad));
+  padding: clamp(32px, 3.4vw, 56px) var(--pad) 0;
+}
+
+.evaluation .ds-strip {
+  padding-top: clamp(28px, 2.8vw, 44px);
+}
+
+/* a problem on its own: problem | what users faced | picture, side by side */
+.sol-row.vp {
+  grid-template-areas: "prob sol shot";
+  grid-template-rows: 1fr;
+}
+
+.vp .sol-solution p {
+  margin: 0;
+  max-width: 30ch;
+  font-size: var(--t-lead);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--text-soft);
+}
+
+.vp .sol-shot {
+  padding-top: clamp(32px, 3.4vw, 56px);
+}
+
+.vp .sol-shot .shot {
+  aspect-ratio: 1 / 1;
+}
+
+/* designed solution: left column holds the idea (top) and a supporting screen (bottom);
+   the main screen fills the two right columns, from the top of the title to the bottom of that screen */
+.design {
+  margin-top: clamp(48px, 5vw, 80px);
+}
+
+.dz-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto 1fr;
+  gap: clamp(28px, 2.8vw, 44px) calc(2 * var(--pad));
+  padding: clamp(32px, 3.4vw, 56px) var(--pad) clamp(64px, 7vw, 96px); /* room for the floating menu */
+  border-top: 1px solid var(--frame);
+}
+
+.dz-text {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.dz-text h3 {
+  margin: 0;
+  font-size: var(--t-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.dz-text p {
+  margin: var(--gap-detail) 0 0;
+  max-width: 40ch;
+  font-size: var(--t-body);
+  line-height: 1.5;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.dz-grid .ch-fig {
+  margin: 0;
+}
+
+.dz-main {
+  grid-column: 2 / span 2;
+  grid-row: 1 / span 2;
+}
+
+.dz-main .zoom {
+  aspect-ratio: 1800 / 1080;
+}
+
+.dz-side {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: end;
+}
+
+.dz-side .zoom {
+  aspect-ratio: 1200 / 860;
+}
+
+@media (max-width: 899px) {
+  .wide-shot .zoom {
+    aspect-ratio: 1.55;
+  }
+
+  .sol-row.vp {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "prob" "sol" "shot";
+    min-height: 0;
+  }
+
+  .vp .sol-solution {
+    padding-top: 20px;
+  }
+
+  .vp .sol-shot {
+    padding: 20px var(--pad) 32px;
+  }
+
+  .dz-grid {
+    grid-template-columns: minmax(0, 1fr);
+    padding-bottom: 40px;
+  }
+
+  .dz-grid > * {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+/* an empty container, waiting for its image, is not clickable */
+div.zoom,
+div.sol-view {
+  cursor: default;
+}
+
+/* four outcomes in a 2 × 2 grid: a rule between the columns and between the rows */
+.outcomes.four {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.outcomes.four .outcome:nth-child(odd) {
+  border-left: 0;
+}
+
+.outcomes.four .outcome:nth-child(n + 3) {
+  border-top: 1px solid var(--frame);
+}
+
+@media (max-width: 899px) {
+  .outcomes.four {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* other deliverables: one wide frame, kept shorter than the screen so the footer starts to show below it
+   (as the product designs do on the GIFA page) */
+.deliverables {
+  margin-top: clamp(48px, 5vw, 80px);
+}
+
+.deliverables .zoom {
+  aspect-ratio: auto;
+  height: clamp(240px, calc(100vh - 480px), 48vw);
+}
+
+@media (max-width: 899px) {
+  .deliverables .zoom {
+    height: auto;
+    aspect-ratio: 1.55;
+  }
+}
+
+/* sections that fit exactly one screen, so one scroll moves straight to the next section (no extra stop):
+   the image takes whatever height is left */
+@media (min-width: 900px) {
+  .one-screen {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    min-height: 0;
+  }
+
+  .one-screen .wide-shot {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding-bottom: clamp(64px, 7vw, 96px); /* room for the floating menu */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .one-screen .wide-shot .ch-fig {
+    flex: 1 1 auto;
+    display: flex;
+  }
+
+  .one-screen .wide-shot .zoom {
+    aspect-ratio: auto;
+    height: 100%;
+  }
+
+  .one-screen .dz-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .one-screen .dz-main {
+    display: flex;
+    min-height: 0;
+  }
+
+  .one-screen .dz-main .zoom {
+    aspect-ratio: auto;
+    height: 100%;
+  }
+}
+
+
+/* solution: a divider between the left column and the main screen, on the same column line as the
+   dividers in the other sections, running from the section's top rule to its bottom */
+.dz-grid {
+  position: relative;
+}
+
+.dz-grid::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(100% / 3);
+  width: 1px;
+  background: var(--frame);
+  pointer-events: none;
+}
+
+@media (max-width: 899px) {
+  .dz-grid::before {
+    display: none;
+  }
+}
+
+/* Two laptops composed in the hero (fee management): the redesign in front and larger, its left edge on
+   the left frame line; the older screen behind, smaller and set back, its right edge on the right frame
+   line. Both are cut off by the bottom of the container, like the GIFA laptops. The laptop bodies fill
+   their image files edge to edge (1505 × 970 front, 1254 × 813 back). */
+.hero-comp.duo {
+  --bf: calc(var(--F) * .6);  /* front laptop width */
+  --bb: calc(var(--F) * .5);  /* back laptop width */
+}
+
+.hd-front {
+  z-index: 2;
+  left: var(--gutter);
+  top: var(--t);
+  width: var(--bf);
+}
+
+.hd-back {
+  left: calc(100% - var(--gutter) - var(--bb));
+  top: calc(var(--t) + var(--bf) * 970 / 1505 * .18);
+  width: var(--bb);
+}
+
+/* diagrams in a strip are shown whole inside the light frame (screens fill it edge to edge) */
+.evaluation .ds-view img {
+  padding: clamp(10px, 1vw, 16px);
+  object-fit: contain;
+}
+
+/* wide image (problem): its label sits outside, above the frame on the left, styled like the other labels
+   above images; the image is centred in the frame with an even inset all round */
+.wide-shot .ch-fig {
+  display: flex;
+  flex-direction: column;
+}
+
+.wide-shot .ch-fig figcaption {
+  position: static;
+  margin-bottom: 14px;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--text-2);
+}
+
+.wide-shot .zoom img {
+  top: var(--ip);
+  height: calc(100% - 2 * var(--ip));
+}
+
+@media (min-width: 900px) {
+  .one-screen .wide-shot .zoom {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+  }
+}
+
+/* image viewer opened on a section's only image: no arrows, no count */
+.lightbox.lb-single .lb-prev,
+.lightbox.lb-single .lb-next,
+.lightbox.lb-single .lb-count {
+  display: none;
+}
+
+/* solution's supporting screen: its label sits above the frame (as on the problem image), and on desktop
+   the frame gets shorter when the screen is short, so it never runs into the title and text above it */
+.dz-side figcaption {
+  position: static;
+  margin-bottom: 14px;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--text-2);
+}
+
+.dz-side .zoom img {
+  top: var(--ip);
+  height: calc(100% - 2 * var(--ip));
+}
+
+@media (min-width: 900px) {
+  .one-screen .dz-side {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 0;
+  }
+
+  .one-screen .dz-side figcaption {
+    flex: none;
+  }
+
+  .one-screen .dz-side .zoom {
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+}
+
+/* ---------- creating automation ---------- */
+
+/* user problems intro: how the problems were found, above the problem rows */
+.up-intro {
+  padding: clamp(32px, 3.4vw, 56px) var(--pad);
+  border-top: 1px solid var(--frame);
+}
+
+.up-intro ul,
+.bullets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* same list style as the impact bullets on GIFA */
+.up-intro li,
+.bullets li {
+  position: relative;
+  padding: 0 0 14px 22px;
+  font-size: var(--t-lead);
+  line-height: 1.4;
+  color: var(--text-soft);
+}
+
+.up-intro li::before,
+.bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .62em;
+  width: 10px;
+  height: 2px;
+  background: var(--accent-solid);
+}
+
+/* a problem with its picture across the two right columns */
+.sol-row.vw {
+  grid-template-areas: "prob shot shot";
+  grid-template-rows: 1fr;
+}
+
+.vw .sol-shot {
+  padding-top: clamp(32px, 3.4vw, 56px);
+}
+
+.vw .sol-shot .shot {
+  aspect-ratio: 1.55;
+}
+
+/* a problem description in more than one paragraph */
+.sol-problem .sol-desc {
+  grid-column: 1 / -1;
+  grid-row: 3;
+}
+
+.sol-desc p + p {
+  margin-top: 12px;
+}
+
+@media (max-width: 899px) {
+  .sol-row.vw {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "prob" "shot";
+    min-height: 0;
+  }
+
+  .vw .sol-shot {
+    padding: 20px var(--pad) 32px;
+  }
+}
+
+/* longer observations: body size, so a column of them stays readable */
+.bullets.small li {
+  font-size: var(--t-body);
+  line-height: 1.5;
+  padding-bottom: 12px;
+  color: var(--text-2); /* body size is grey across the site; the light colour is for lead-size text */
+}
+
+.bullets.small li::before {
+  top: .7em;
+}
+
+/* design iterations: the idea and the screen across two columns; findings in the third, one cell each,
+   divided by rules */
+.iter {
+  margin-top: clamp(48px, 5vw, 80px);
+}
+
+.it-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--frame);
+}
+
+.it-main {
+  grid-column: 1 / span 2;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 2.4vw, 36px);
+  padding: clamp(32px, 3.4vw, 56px) var(--pad) clamp(64px, 7vw, 96px); /* room for the floating menu */
+  border-right: 1px solid var(--frame);
+}
+
+.it-text p {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--t-body);
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+.it-text p + p {
+  margin-top: 12px;
+}
+
+.it-shot {
+  margin: 0;
+}
+
+.it-shot .zoom {
+  aspect-ratio: 1.6;
+}
+
+.it-cell {
+  padding: clamp(32px, 3.4vw, 56px) var(--pad);
+}
+
+.it-cell + .it-cell {
+  border-top: 1px solid var(--frame);
+}
+
+@media (min-width: 900px) {
+  /* one screen per iteration: the screen takes the height that is left */
+  .iter.one-screen .it-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .iter .it-shot {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+  }
+
+  .iter .it-shot .zoom {
+    aspect-ratio: auto;
+    height: 100%;
+  }
+}
+
+@media (max-width: 899px) {
+  .it-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .it-main {
+    grid-column: 1;
+    padding-bottom: 32px;
+    border-right: 0;
+  }
+
+  .it-cell,
+  .it-cell + .it-cell {
+    border-top: 1px solid var(--frame);
+  }
+}
+
+/* short desktop screens: tighter findings cells, so iteration 1's results and observations fit the screen */
+@media (min-width: 900px) and (max-height: 800px) {
+  .it-cell {
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+}
+
+/* prototype: the section is one screen, and its frame fills everything below the title */
+.prototype {
+  margin-top: clamp(48px, 5vw, 80px);
+}
+
+/* test results: who was tested, then each result as a large figure with a line under it. Blue for a good
+   result, amber for one that needs work */
+:root {
+  --warn: linear-gradient(180deg, #F5C04A 0%, #E8920F 100%); /* same direction as the blue: light at the top */
+}
+
+.tested {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: 1.4;
+  color: var(--text-2);
+}
+
+.tested strong {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.tested .persona-ic {
+  margin-right: .5em;
+}
+
+.stats {
+  display: grid;
+  gap: clamp(24px, 2.4vw, 40px);
+  margin-top: clamp(28px, 2.8vw, 44px);
+}
+
+.stat-num {
+  display: block;
+  width: max-content;
+  font-size: clamp(56px, 5vw, 84px);
+  font-weight: 600;
+  line-height: .9;
+  letter-spacing: -0.04em;
+  background: var(--accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stat.warn .stat-num {
+  background: var(--warn);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.stat-text {
+  display: block;
+  margin-top: 12px;
+  max-width: 26ch;
+  font-size: var(--t-lead);
+  line-height: 1.4;
+  color: var(--text-soft);
+}
+
+/* the figures side by side, so a results column with observations under it still fits one screen */
+.stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--pad);
+}
+
+.stat-num {
+  font-size: clamp(48px, 4.4vw, 72px);
+}
+
+/* a key phrase in a problem description, highlighted the same way as in the leads */
+.sol-desc strong {
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* a live embedded window (a Loom video, a Figma prototype) filling its frame edge to edge */
+.zoom.live iframe {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* One laptop in the hero (creating automation): centred, cut off by the bottom of the container. The laptop
+   body fills its image file edge to edge (1793 wide). */
+.hs-center {
+  z-index: 2;
+  left: 50%;
+  top: var(--t);
+  width: calc(var(--F) * .6);
+  transform: translateX(-50%);
+}
+
+/* an image of a device cut off at the bottom: no label inside the frame, so the image sits in the usual
+   inset at the top and sides and runs to the frame's bottom edge, where its cut lines up with the frame */
+.zoom.bleed-b img {
+  top: var(--ip);
+  height: calc(100% - var(--ip));
+  object-position: center bottom;
+}
+
+/* iteration with a device screen: the frame runs to the bottom of the section (no space under it), and the
+   screen spans the frame's full width, cut off by the frame's bottom edge as the laptop itself is */
+.it-main.flush {
+  padding-bottom: 0;
+}
+
+.it-main.flush .zoom.bleed-b {
+  overflow: hidden;
+}
+
+/* full width, sitting on the frame's bottom edge; on a short screen it keeps the inset at the top and
+   loses a little from its (already cut) bottom instead */
+.it-main.flush .zoom.bleed-b img {
+  top: auto;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  max-height: calc(100% - var(--ip));
+  object-fit: cover;
+  object-position: center top;
+}
+
+@media (max-width: 899px) {
+  /* phones: the frame takes the screen's own shape (plus the inset above it), so nothing is cropped */
+  .it-main.flush .it-shot .zoom {
+    aspect-ratio: auto;
+    height: calc((100vw - 2 * var(--gutter) - 2 * var(--pad)) * 957 / 1793 + clamp(10px, 1vw, 16px));
+  }
+}
+
+@media (min-width: 900px) {
+  /* the frame takes the screen's shape (plus the inset above it) and sits at the bottom of the column, so
+     any spare height goes above the frame, between the text and the image, not inside it. On a short screen
+     the frame is capped at the height that's left, and the image loses a little of its cut bottom */
+  .it-main.flush .it-shot {
+    flex: 1 1 0; /* exactly the height that's left under the text, so the frame's cap below applies */
+    align-items: flex-end;
+  }
+
+  .it-main.flush .it-shot .zoom {
+    height: auto;
+    aspect-ratio: 1793 / 990;
+    max-height: 100%;
+  }
+}
+
+/* iteration 1 screen: 40px of the light frame above it and at its sides (16px on phones); still flush with
+   the frame's bottom edge. The frame's height follows: the screen's height at that width, plus the top
+   padding */
+.it-main.flush .it-shot {
+  --fp: 40px;
+  container-type: inline-size;
+}
+
+.it-main.flush .zoom.bleed-b img {
+  left: var(--fp);
+  width: calc(100% - 2 * var(--fp));
+  max-height: calc(100% - var(--fp));
+}
+
+@media (min-width: 900px) {
+  .it-main.flush .it-shot .zoom {
+    aspect-ratio: auto;
+    height: calc((100cqw - 2 * var(--fp)) * 957 / 1793 + var(--fp));
+  }
+}
+
+@media (max-width: 899px) {
+  .it-main.flush .it-shot {
+    --fp: 16px;
+  }
+
+  .it-main.flush .it-shot .zoom {
+    height: calc((100cqw - 2 * var(--fp)) * 957 / 1793 + var(--fp));
+  }
+}
+
+/* iteration 1's label: above the frame on the left, outside it, as on the other labelled images */
+.it-shot figcaption {
+  position: static;
+  margin-bottom: 14px;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--text-2);
+}
+
+@media (min-width: 900px) {
+  .it-main.flush .it-shot {
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
+  }
+
+  .it-main.flush .it-shot figcaption {
+    flex: none;
+  }
+
+  .it-main.flush .it-shot .zoom {
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+}
+
+@media (min-width: 900px) {
+  /* problem rows with a picture across two columns: the frame fills the height left in the row (one
+     screen under the pinned title), so a row never runs past the screen; the picture sits whole inside */
+  .vw .sol-shot {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .vw .sol-shot .shot {
+    flex: 1 1 0;
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+}
+
+/* overview facts: Team and Client, in two equal columns */
+.facts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.facts > div:first-child dd {
+  max-width: 46ch;
+}
+
+@media (max-width: 899px) {
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* clear cover over a live window: the page scrolls over it; a click lifts it (see case-study.js) */
+.live-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit; /* buttons don't take the page font on their own, so the chip would fall back to Arial */
+  cursor: pointer;
+}
+
+.live-chip {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  padding: 9px 14px;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 999px;
+  background: rgba(18, 19, 21, .82);
+  font-size: var(--t-label);
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text);
+  transition: background .2s;
+}
+
+.live-cover:hover .live-chip,
+.live-cover:focus-visible .live-chip {
+  background: var(--accent-deep);
+}
+
+.live-cover:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* ---------- site header ----------
+   Shared by every page: the name, then Home and Contact close beside it on the left (the right side stays
+   open, for the home page's signature), closed off by a rule. On wide screens it follows the smaller of width
+   and height, like the home page, so first screens fit. */
+.site-head {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: clamp(40px, 3.6vw, 64px);
+  min-height: clamp(88px, 7vw, 112px);
+  padding: 0 var(--pad);
+  border-left: 1px solid var(--frame);
+  border-right: 1px solid var(--frame);
+  border-bottom: 1px solid var(--frame);
+}
+
+@media (min-width: 900px) {
+  .site-head { min-height: clamp(60px, min(7vw, 11.2vh), 112px); }
+}
+
+@media (max-width: 899px) {
+  .site-head { gap: 32px; }
+}
+
+.logo { font-size: var(--t-section); font-weight: 700; letter-spacing: .02em; text-transform: uppercase; color: var(--text); text-decoration: none; }
+.logo span { color: var(--accent-solid); }
+.site-nav { display: flex; gap: clamp(24px, 2.4vw, 40px); }
+.site-nav a { font-size: var(--t-label); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-2); text-decoration: none; transition: color .2s; }
+.site-nav a:hover,
+.site-nav a[aria-current="page"] { color: var(--text); }
+.site-nav a:focus-visible,
+.logo:focus-visible { outline: 2px solid var(--text); outline-offset: 4px; }
+
+/* case studies: the header opens the first screen; once it has scrolled away it floats (case-study.js),
+   hidden while you read down, back when you scroll up or point at the top edge. The slot keeps its place,
+   so nothing moves when it lifts out; floating, it's a slimmer bar, so it covers less of the section. */
+.head-slot { flex: none; }
+
+.head-slot.floating .site-head {
+  position: fixed;
+  top: 0;
+  left: var(--gutter);
+  right: var(--gutter);
+  z-index: 40;
+  min-height: 64px;
+  background: var(--bg);
+  transform: translateY(-101%);
+  transition: transform .45s var(--ease);
+}
+
+.head-slot.floating.shown .site-head { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .head-slot.floating .site-head { transition: none; }
+}
+
+/* ---------- phones: the section index as a button and a panel ----------
+   The bar of section numbers gives way to one "Index" button, bottom right; it opens the sections as a panel
+   from the right (case-study.js), the current one marked, with Close at the bottom. Desktop keeps the bar. */
+.ix-btn,
+.ix-shade,
+.ix-panel {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .index {
+    display: none;
+  }
+
+  .ix-btn {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 30;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px 12px 16px;
+    border: 1px solid var(--stroke);
+    border-radius: 999px;
+    background: rgba(18, 19, 21, .88);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    font: inherit;
+    font-size: var(--t-label);
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  /* a short list (marks and lines), so it isn't mistaken for the header's Menu */
+  .ix-ico {
+    width: 16px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+
+  .ix-shade {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: block;
+    background: rgba(0, 0, 0, .45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s, visibility .3s;
+  }
+
+  .ix-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 41;
+    display: flex;
+    flex-direction: column;
+    width: min(80vw, 320px);
+    padding: 56px 28px 28px;
+    border-left: 1px solid var(--stroke);
+    background: #18191C;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform .4s var(--ease), visibility .4s;
+  }
+
+  /* opening, they become visible at once (so focus can move in); closing, they stay until they've slid away */
+  .ix-open .ix-shade { opacity: 1; visibility: visible; transition: opacity .3s, visibility 0s; }
+  .ix-open .ix-panel { transform: none; visibility: visible; transition: transform .4s var(--ease), visibility 0s; }
+  .ix-open { overflow: hidden; } /* the page behind stays put */
+
+  .ix-head {
+    margin: 0 0 20px;
+    font-size: var(--t-label);
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .ix-panel a {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--stroke);
+    font-size: 18px;
+    color: var(--text-2);
+    text-decoration: none;
+  }
+
+  .ix-panel a span {
+    font-size: var(--t-label);
+    font-variant-numeric: tabular-nums;
+    opacity: .6;
+  }
+
+  .ix-panel a[aria-current="true"] {
+    color: var(--text);
+  }
+
+  .ix-panel a[aria-current="true"] span {
+    opacity: 1;
+    background: var(--accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .ix-close {
+    align-self: flex-end;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    padding: 12px 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: var(--t-label);
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    cursor: pointer;
+  }
+
+  .ix-x {
+    position: relative;
+    width: 14px;
+    height: 14px;
+  }
+
+  .ix-x::before,
+  .ix-x::after {
+    content: "";
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    top: 50%;
+    border-top: 1.5px solid currentColor;
+    transform: rotate(45deg);
+  }
+
+  .ix-x::after {
+    transform: rotate(-45deg);
+  }
+
+  .ix-btn:focus-visible,
+  .ix-close:focus-visible,
+  .ix-panel a:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ix-shade, .ix-panel { transition: none; }
+}
+
+/* ---------- body copy ----------
+   Descriptions under challenges, problems, solutions, outcomes and iterations, a step lighter than the
+   secondary grey; labels, captions and the lead sentences keep their own colours. */
+.card p,
+.ch-text p,
+.sol-problem p,
+.sol-solution p,
+.outcome p,
+.dz-text p,
+.bullets.small li,
+.it-text p {
+  color: var(--text-body);
+}
+
+/* ---------- phones: comfortable tap areas ----------
+   Small controls keep their look but take a larger touch area: the header's name and links, the footer's
+   links, and the screen-switch squares above a solution's screenshot. */
+@media (max-width: 899px) {
+  .logo,
+  .site-nav a {
+    padding: 14px 0;
+  }
+
+  .site-nav a {
+    margin: 0 -8px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .thumb {
+    position: relative;
+  }
+
+  .thumb::after {
+    content: "";
+    position: absolute;
+    inset: -10px -4px; /* 32 x 44: wide as the gap allows, so neighbouring squares don't overlap */
+  }
+
+  /* the footer's links in the nav's label style, so "Other projects" leads; each a full-height tap */
+  .sf-links {
+    gap: 0;
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .sf-links a {
+    padding: 16px 0;
+    font-size: var(--t-label);
+    letter-spacing: .1em;
+  }
+}
+/* ---------- phones: the header's menu ----------
+   The header's links give way to one "Menu" button, right, in its own cell behind a frame line; it opens a
+   panel from the right (site-menu.js): Home, Work with the four case studies, Contact; the page you're on lit.
+   Close takes Menu's exact place. Desktop keeps its links. */
+.mm-btn,
+.mm-shade,
+.mm-panel {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .site-head { padding-right: 0; }
+  .site-head .site-nav { display: none; }
+
+  .mm-btn,
+  .mm-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    align-self: stretch;
+    min-width: 128px;
+    margin-left: auto;
+    padding: 0 var(--pad);
+    border: 0;
+    border-left: 1px solid var(--frame);
+    background: none;
+    font: inherit;
+    font-size: var(--t-label);
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .mm-burger {
+    position: relative;
+    width: 18px;
+    height: 12px;
+    border-top: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+  }
+
+  .mm-burger::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    border-top: 1.5px solid currentColor;
+    transform: translateY(-50%);
+  }
+
+  .mm-x {
+    position: relative;
+    width: 14px;
+    height: 14px;
+  }
+
+  .mm-x::before,
+  .mm-x::after {
+    content: "";
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    top: 50%;
+    border-top: 1.5px solid currentColor;
+    transform: rotate(45deg);
+  }
+
+  .mm-x::after { transform: rotate(-45deg); }
+
+  .mm-shade {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: block;
+    background: rgba(0, 0, 0, .55);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s, visibility .3s;
+  }
+
+  .mm-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 51;
+    display: flex;
+    flex-direction: column;
+    width: min(88vw, 400px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-left: 1px solid var(--stroke);
+    background: #18191C;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform .45s var(--ease), visibility .45s;
+  }
+
+  /* opening, they become visible at once (so focus can move in); closing, they stay until they've slid away */
+  .mm-open .mm-shade { opacity: 1; visibility: visible; transition: opacity .3s, visibility 0s; }
+  .mm-open .mm-panel { transform: none; visibility: visible; transition: transform .45s var(--ease), visibility 0s; }
+  .mm-open { overflow: hidden; } /* the page behind stays put */
+
+  /* the panel's top row matches the header, so Close sits where Menu was */
+  .mm-top {
+    flex: none;
+    display: flex;
+    height: var(--head, 88px);
+    min-height: 88px;
+    border-bottom: 1px solid var(--stroke);
+  }
+
+  .mm-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 8px var(--pad) 32px;
+  }
+
+  /* Home, Work, Contact: the header's label style, a size up; the current one white with a blue square */
+  .mm-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--stroke);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    text-decoration: none;
+  }
+
+  .mm-link[data-k="work"] { border-bottom: 0; padding-bottom: 12px; }
+  .mm-link[aria-current="true"] { color: var(--text); }
+  .mm-link[aria-current="true"]::after { content: ""; width: 9px; height: 9px; background: var(--accent-solid); }
+
+  /* the case studies: a light thumbnail of the main screen, standing on its bottom edge, then title and
+     description; the one you're on is outlined like the case studies' current screen thumbnail */
+  .mm-cases {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--stroke);
+  }
+
+  .mm-case {
+    position: relative;
+    display: grid;
+    grid-template-columns: 104px 1fr;
+    gap: 16px;
+    align-items: start;
+    padding: 10px 0;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .mm-thumb {
+    position: relative;
+    aspect-ratio: 1.45;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .mm-thumb img {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 86%;
+    height: auto;
+    transform: translateX(-50%);
+  }
+
+  .mm-case[aria-current="true"] .mm-thumb { outline: 1px solid var(--text); outline-offset: 3px; }
+
+  .mm-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+
+  .mm-title {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+
+  .mm-desc {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--text-2);
+  }
+
+  .mm-case.soon .mm-thumb img { opacity: .55; }
+  .mm-case.soon .mm-title { color: var(--text-2); }
+
+  .mm-soon {
+    position: absolute;
+    top: 14px;
+    left: 8px;
+    padding: 3px 6px;
+    background: var(--bg);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .mm-btn:focus-visible,
+  .mm-close:focus-visible,
+  .mm-panel a:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: -4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mm-shade, .mm-panel { transition: none; }
+}
+
+/* ---------- the header's WORK and its squares ----------
+   One square per case study (Stamp included), the current one blue; on the home page the section in view,
+   on a case study that case study. Phones hide them with the links (the Menu takes over). */
+.site-nav { align-items: center; }
+.nav-work { display: inline-flex; align-items: center; gap: 12px; }
+.sq-row { display: inline-flex; gap: 6px; }
+.sq { position: relative; display: block; width: 9px; height: 9px; background: var(--text); opacity: .35; transition: opacity .3s, background .3s; } /* the case studies' squares (.count) */
+.sq::after { content: ""; position: absolute; inset: -8px -3px; } /* a bigger target than the mark */
+.sq:hover { opacity: .6; }
+.sq[aria-current="true"] { background: var(--accent-solid); opacity: 1; }
+.site-nav .sq { padding: 0; }
+.site-nav .sq:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+.site-nav a[aria-current="true"] { color: var(--text); } /* the section in view */

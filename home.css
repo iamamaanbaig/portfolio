@@ -1,0 +1,200 @@
+/* Home: Home, Work and Contact on one page. On wide windows one scroll moves one section (home.js); each
+   section takes the top 85% of the window, so the last 15% shows the start of the next. Phones
+   scroll freely. Sits on styles.css, the shared case-studies/case-study.css and contact/contact.css. */
+:root { --head: clamp(88px, 7vw, 112px); --u: 1vw; --panel: #0C0B0E; } /* --panel: the glow image's own base, under the hero and the case-study captions */
+@media (min-width: 900px) {
+  :root { --head: clamp(60px, min(7vw, 11.2vh), 112px); --u: min(1vw, 1.6vh); --sec: calc(85vh - var(--head)); }
+}
+
+/* the header stays put (its WORK squares are shared, in case-study.css) */
+body { overflow-x: clip; } /* the signature runs off the window's right edge; no sideways scroll */
+.site-head { position: fixed; z-index: 20; top: 0; left: var(--gutter); right: var(--gutter); height: var(--head); background: var(--bg); transition: background-color .4s, border-color .4s; }
+
+.snaps { padding-top: var(--head); }
+.snap { position: relative; scroll-margin-top: var(--head); border-left: 1px solid var(--frame); border-right: 1px solid var(--frame); }
+
+/* ---------- Home: the glow panel, the title, the statement, the signature ---------- */
+.s-home { display: flex; flex-direction: column; overflow: hidden; background: var(--panel); padding: clamp(28px, calc(var(--u) * 5), 88px) var(--pad) clamp(24px, calc(var(--u) * 3), 48px); }
+.s-home .glow { position: absolute; inset: auto 0 0; height: 78%; background: url(assets/hero-glow.webp?v=1) center bottom / 100% 100% no-repeat; pointer-events: none; }
+.s-home .sig { position: absolute; pointer-events: none; background: url(assets/home-bg2.webp?v=1) center top / contain no-repeat; aspect-ratio: 1160 / 1184; }
+.hero-title { position: relative; margin: 0; max-width: 11.5ch; font-weight: 400; line-height: 1.02; letter-spacing: -0.03em; }
+.tagline { position: relative; margin: 0; max-width: 24ch; font-weight: 400; color: var(--text-2); }
+.down { position: relative; margin-top: auto; display: inline-flex; align-items: center; gap: 10px; align-self: flex-start;
+  font-size: var(--t-lead); color: var(--text-2); text-decoration: none; transition: color .2s; }
+.down svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; transition: transform .4s var(--ease); }
+.down:hover { color: var(--text); }
+.down:hover svg { transform: translateY(3px); }
+
+/* ---------- Work: the case study's opening on the light surface, cut off at the bottom; under it, the result ---------- */
+.s-work { display: flex; flex-direction: column; border-top: 1px solid var(--frame); }
+.op-shot { position: relative; container-type: size; overflow: hidden; background: var(--surface); transition: background .6s var(--ease); }
+.cap { display: grid; grid-template-columns: 1fr auto; align-content: start; column-gap: 32px; overflow: hidden;
+  padding: clamp(24px, calc(var(--u) * 2.8), 48px) var(--pad); background: var(--panel); } /* plain: the glow belongs to the hero alone */
+.cap h2 { grid-column: 1; margin: 0; font-size: clamp(32px, calc(var(--u) * 4.2), 84px); font-weight: 500; line-height: 1.08; letter-spacing: -0.025em; }
+.cap h2 a { color: inherit; text-decoration: none; }
+.cap h2 a::after { content: ""; position: absolute; inset: 0; z-index: 1; } /* the whole section is the link */
+.cap p { grid-column: 1; position: relative; z-index: 2; margin: clamp(12px, calc(var(--u) * 1.4), 24px) 0 0; max-width: 62ch;
+  font-size: var(--t-lead); line-height: 1.4; color: var(--text-body); }
+.cap p .term { pointer-events: auto; }
+.arrow { grid-column: 2; grid-row: 1; display: grid; place-items: center; width: clamp(32px, calc(var(--u) * 4.2), 84px); aspect-ratio: 1; color: var(--text-2); transition: color .25s, transform .5s var(--ease); }
+.arrow svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.25; }
+.s-work:hover .arrow { color: var(--text); transform: translate(4px, -4px); }
+.soon-tag { width: auto; aspect-ratio: auto; align-self: start; padding-top: .6em; font-size: var(--t-label); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.s-work.soon:hover .arrow { transform: none; color: var(--text-2); }
+
+/* the case study's opening, as on the case study (case-study.css, hero-comp); the numbers come from the image files */
+.pv-comp { position: absolute; inset: 0; --F: min(100cqw - 2 * var(--pad), 320cqh); /* side padding: the laptops' outer edges line up with the text below */ --o: calc((100cqw - var(--F)) / 2); --t: max(28px, 10cqh); transition: transform .9s var(--ease); }
+.s-work:not(.soon):hover .pv-comp { transform: translateY(-10px); }
+.pv-comp img { position: absolute; display: block; height: auto; }
+.solo .pv-center { z-index: 2; left: 50%; top: var(--t); width: calc(var(--F) * .6); transform: translateX(-50%); }
+.duo { --bf: calc(var(--F) * .6); --bb: calc(var(--F) * .5); }
+.duo .pv-front { z-index: 2; left: var(--o); top: var(--t); width: var(--bf); }
+.duo .pv-back { left: calc(var(--o) + var(--F) - var(--bb)); top: calc(var(--t) + var(--bf) * 970 / 1505 * .18); width: var(--bb); }
+.trio { --bc: calc(var(--F) * .52); --bs: calc(var(--bc) * .73); }
+.trio .pv-center { z-index: 2; left: calc(50cqw - var(--bc) / 2 - var(--bc) * 83 / 1567); top: calc(var(--t) - var(--bc) * 43 / 1567); width: calc(var(--bc) * 1733 / 1567); }
+.trio .pv-left, .trio .pv-right { top: calc(var(--t) + var(--bc) * 1008 / 1567 * .27 - var(--bs) * 43 / 1567); width: calc(var(--bs) * 1653 / 1567); }
+.trio .pv-left { left: calc(var(--o) - var(--bs) * 83 / 1567); }
+.trio .pv-right { left: calc(var(--o) + var(--F) - var(--bs) - var(--bs) * 3 / 1567); }
+
+/* ---------- Contact: the contact page (contact.css), as the last section ---------- */
+.s-contact { display: flex; flex-direction: column; min-height: 0; border: 0; }
+.s-contact .contact { border-top: 1px solid var(--frame); }
+.msg h2.contact-title { margin: 0; }
+
+/* the cursor over a case study: a dark pill, the site's arrow in the brand gradient and "View case study";
+   over the case study to come, a light grey pill, "Case study coming soon" */
+.cs-cursor { display: none; }
+@media (hover: hover) and (min-width: 900px) {
+  .s-work { cursor: none; }
+  .s-work .term { cursor: help; }
+  .cs-cursor { display: flex; align-items: center; gap: 10px; position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none;
+    padding: 11px 18px 11px 14px; margin: -22px 0 0 -24px; border-radius: 999px; background: #111214;
+    font-size: 15px; font-weight: 500; letter-spacing: -0.005em; line-height: 1; color: var(--text); white-space: nowrap;
+    opacity: 0; scale: .6; transform-origin: 24px 22px; transition: opacity .2s, scale .3s var(--ease); }
+  .cs-cursor.on { opacity: 1; scale: 1; }
+  .cs-cursor svg { flex: none; width: 18px; height: 18px; }
+  .cs-cursor.soon { padding: 11px 18px; background: #DCDDDF; color: var(--bg); }
+  .cs-cursor.soon svg { display: none; }
+}
+
+/* ---------- wide windows: fixed proportions, so every stop lands the same way ---------- */
+@media (min-width: 900px) {
+  .s-work { height: var(--sec); }
+  /* the hero reaches up under the header, which stays clear while the hero is in view (home.js marks it), so the
+     signature runs up through the header and off the top; the band behind the header keeps the page colour */
+  .s-home { height: calc(var(--sec) + var(--head)); margin-top: calc(-1 * var(--head)); padding-top: calc(var(--head) + clamp(28px, calc(var(--u) * 5), 88px));
+    background: linear-gradient(var(--bg) var(--head), var(--panel) var(--head)); }
+  .s-home .glow, .s-home .sig { z-index: 0; }
+  .s-home > :not(.glow):not(.sig) { z-index: 1; }
+  .at-hero .site-head { background-color: transparent; border-color: transparent; }
+  /* the frame lines run behind the signature: while the hero is in view the header's rule and side lines step
+     aside and the hero draws them itself (its own sides, and the rule at the header's foot), under the signature,
+     which runs past the right frame line to the window's edge; the hero clips it top and bottom only */
+  .s-home { overflow: visible; clip-path: inset(0 -50vw); }
+  .s-home::before { content: ""; position: absolute; z-index: 0; left: 0; right: 0; top: calc(var(--head) - 1px); height: 1px; background: var(--frame); }
+  .s-home { --title: clamp(48px, min(calc((47.25vw - var(--pad)) / 6), calc(var(--u) * 8.4)), 168px); }
+  .hero-title { font-size: var(--title); }
+  .tagline { margin-top: clamp(20px, calc(var(--u) * 3), 56px); font-size: clamp(18px, calc(var(--u) * 2.1), 40px); line-height: 1.4; }
+  /* the signature: large, its crossbar starting just left of where "UX & Product" ends (6 ems), the "B" running
+     off the top and the crossbar off the right; never wider than 1.26 window heights, so short windows keep it */
+  .s-home .sig { --sigw: min(86vw, 126vh); width: var(--sigw); top: calc(var(--sigw) * 1184 / 1160 * -.094);
+    left: calc(var(--pad) + var(--title) * 5.97 - var(--sigw) * .241); }
+  .op-shot { flex: 0 0 56%; }
+  /* a case study waiting below stays on the page colour; its panel turns light once it is the current section.
+     Phones scroll freely, so there they are light from the start */
+  .s-work:not(.is-current) .op-shot { background: var(--bg); }
+  .cap { flex: 1; }
+  .s-contact { height: calc(100vh - var(--head)); }
+}
+
+/* ---------- phones: no stepping; the sections stack and scroll freely ---------- */
+@media (max-width: 899px) {
+  .s-home { min-height: calc(82svh - var(--head)); padding-top: 40px; }
+  .hero-title { font-size: clamp(44px, 12vw, 64px); }
+  .tagline { margin-top: 16px; font-size: clamp(18px, 4.6vw, 22px); line-height: 1.35; }
+  .s-home .sig { width: 110%; left: -2%; top: 30%; }
+  .s-home .glow { height: 60%; background-size: auto 100%; }
+  .op-shot { height: 42vw; } /* as tall as the padded laptops need, so they still reach the bottom edge */
+  .op-shot .pv-comp { --t: 28px; }
+  .cap { grid-template-columns: 1fr auto; column-gap: 16px; padding-top: 24px; padding-bottom: 40px; }
+  .cap h2 { font-size: clamp(28px, 8vw, 36px); }
+  .arrow { width: 28px; }
+  .s-contact { min-height: calc(100svh - var(--head)); }
+}
+/* phones: the header is the name and the Menu button */
+@media (max-width: 899px) {
+  .logo { white-space: nowrap; } /* the links give way to the Menu button (site-menu.js, case-study.css) */
+}
+
+/* ---------- WORK's menu (pointer screens) ----------
+   Hovering WORK (or its squares) drops a dark list of the case studies from the header, lined up under WORK.
+   The page behind steps back: the glow goes out, and a blurred shade covers it, darkening downwards.
+   The item under the pointer turns light and its case study's opening opens beside it, reaching down at
+   least to the item's foot, so the two read as one light shape. */
+.work-menu, .wm-scrim { display: none; }
+@media (hover: hover) and (min-width: 900px) {
+  .work-menu { --wm-w: clamp(380px, 32vw, 600px); --wm-h: 44vh; display: block; position: absolute; left: 0; right: 0; top: 100%; pointer-events: none; }
+  .wm-list { position: relative; z-index: 2; margin-left: var(--wm-x, 30%); width: var(--wm-w); background: var(--bg);
+    clip-path: inset(0 0 100% 0); transition: clip-path .5s var(--ease); }
+  .wm-item { position: relative; display: grid; grid-template-columns: 1fr auto; column-gap: 20px; padding: 0 var(--pad); color: inherit; text-decoration: none;
+    transition: background .25s, opacity .3s; }
+  .wm-item > * { transition: color .25s; }
+  .wm-item::before { content: ""; grid-column: 1 / -1; height: clamp(18px, calc(var(--u) * 2), 32px); }
+  .wm-item::after { content: ""; grid-column: 1 / -1; height: clamp(20px, calc(var(--u) * 2.2), 36px); border-bottom: 1px solid var(--frame); }
+  .wm-item:last-child::after { border-bottom: 0; }
+  /* type: a menu to scan, not to read. The title leads (24px at 1440, medium, tight), the description steps back
+     a size and a shade (16px, the secondary grey) and keeps to two lines; both scale with --u */
+  .wm-item { --wm-t: clamp(19px, calc(var(--u) * 1.7), 28px); }
+  .wm-title { font-size: var(--wm-t); font-weight: 500; line-height: 1.25; letter-spacing: -0.02em; color: var(--text); text-wrap: balance; }
+  .wm-desc { grid-column: 1; margin-top: 6px; max-width: 38ch; font-size: clamp(14px, calc(var(--u) * 1.1), 17px); line-height: 1.45; color: var(--text-2); text-wrap: pretty; }
+  .wm-arrow { grid-column: 2; grid-row: 2; display: grid; place-items: center; width: 18px; height: calc(var(--wm-t) * 1.25); color: var(--text-2); transition: color .25s, transform .3s var(--ease); }
+  .wm-arrow svg { width: 100%; fill: none; stroke: currentColor; stroke-width: 1.5; }
+  .wm-item.on .wm-arrow { transform: translate(2px, -2px); }
+  .wm-soon { width: auto; height: calc(var(--wm-t) * 1.25); font-size: var(--t-label); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+  .wm-item.on { background: var(--surface); border-color: var(--surface); }
+  .wm-item.on::after { border-color: transparent; }
+  .wm-item.on .wm-title, .wm-item.on .wm-arrow { color: var(--bg); }
+  .wm-item.on .wm-desc { color: #5B5D62; }
+  .wm-item.on.soon .wm-arrow { color: #8A8C91; }
+  .wm-item:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+
+  /* the preview: from the list's right edge to the frame, a fixed height, centred on the item under the pointer
+     (kept within the list), so the two always meet as one light shape; it holds the case study's main screen */
+  .wm-preview { position: absolute; z-index: 1; left: calc(var(--wm-x, 30%) + var(--wm-w) - 1px); /* tucked 1px under the list, so no seam shows */ right: 0;
+    top: var(--wm-top, 0px); height: var(--wm-h); overflow: hidden; background: var(--surface);
+    clip-path: inset(0 0 0 100%); transition: clip-path .5s var(--ease), top .45s var(--ease); }
+  /* one laptop, centred, standing on the panel's bottom edge with air above; never so wide that it fills the
+     height. --drop hides a file's own transparent margin below the laptop (GIFA's shadow: 20 of 1092px) */
+  .wm-shot { position: absolute; left: 50%; bottom: 0; width: min(84%, calc(var(--wm-h) * 1.3)); height: auto; opacity: 0;
+    transform: translate(-50%, calc(var(--drop, 0%) + 24px)); transition: opacity .3s, transform .6s var(--ease); }
+  .wm-shot:first-child { --drop: 1.9%; }
+  .wm-shot.on { opacity: 1; transform: translate(-50%, var(--drop, 0%)); transition-delay: .06s; }
+
+  .wm-scrim { display: block; position: fixed; z-index: 15; inset: var(--head) var(--gutter) 0; pointer-events: none; opacity: 0; transition: opacity .4s;
+    -webkit-backdrop-filter: blur(22px) saturate(.4); backdrop-filter: blur(22px) saturate(.4);
+    background: linear-gradient(rgba(18,19,21,.14) 0%, rgba(18,19,21,.2) 34%, rgba(18,19,21,.9) 52%, var(--bg) 72%); }
+
+  /* only the list and the open preview count as the menu: the box around them lets the pointer through, so
+     leaving them for the page around closes it */
+  .menu-open .wm-list, .menu-open.previewing .wm-preview { pointer-events: auto; }
+  .menu-open .wm-list { clip-path: inset(0); }
+  .menu-open.previewing .wm-preview { clip-path: inset(0); }
+  .menu-open .wm-scrim { opacity: 1; }
+  .menu-open .s-home .glow, .menu-open .s-home .sig { opacity: 0; }
+  .s-home .glow, .s-home .sig { transition: opacity .4s; }
+  .menu-open .site-nav > a[aria-current="true"] { color: var(--text-2); } /* one lit item: WORK, while its menu is open */
+  .menu-open .site-nav .nav-work > a { color: var(--text); }
+}
+@media (prefers-reduced-motion: reduce) { .wm-list, .wm-preview, .wm-shot, .wm-scrim { transition: none; } }
+
+/* entrance: the title rises in, then the statement, and the signature fades up last */
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+@keyframes glow { from { opacity: 0; } }
+.hero-title { animation: rise .9s var(--ease) both .1s; }
+.tagline { animation: rise .9s var(--ease) both .25s; }
+.down { animation: rise .9s var(--ease) both .4s; }
+.s-home .sig { animation: glow 1.6s ease both .6s; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-title, .tagline, .down, .s-home .sig { animation: none; }
+  .op-shot, .pv-comp, .arrow, .cs-cursor { transition: none; }
+}
