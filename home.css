@@ -65,7 +65,7 @@ body { overflow-x: clip; } /* the signature runs off the window's right edge; no
    over the case study to come, a light grey pill, "Case study coming soon" */
 .cs-cursor { display: none; }
 @media (hover: hover) and (min-width: 900px) {
-  .s-work { cursor: none; }
+  .s-work, .s-work a { cursor: none; } /* the link inside would bring back the hand under the pill */
   .s-work .term { cursor: help; }
   .cs-cursor { display: flex; align-items: center; gap: 10px; position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none;
     padding: 11px 18px 11px 14px; margin: -22px 0 0 -24px; border-radius: 999px; background: #111214;
