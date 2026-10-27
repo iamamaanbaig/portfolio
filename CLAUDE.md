@@ -71,7 +71,8 @@ as needed, keeping the intent of the reference.
   bottom edge (no gap below), so the
   two read as one light shape. Items open the case-study pages. Only WORK, the list and the open
   preview count as the menu: the pointer anywhere else (beside the list, below
-  the preview) closes it after a short grace (250ms); so do Esc and a scroll.
+  the preview) closes it after a short grace (250ms); so do Esc and a scroll. A click on WORK or a square closes it at
+  once, and it stays shut until the pointer leaves them.
 - Site header on every page: the name, then Home, Work with one square per
   case study, and Contact close beside it on the left. On the home page the
   section in view is lit; on a case study, Work and that case study's square.
@@ -106,7 +107,7 @@ as needed, keeping the intent of the reference.
   carry their width and height. Sharing: every page has Open Graph tags, the
   image `assets/og-image.jpg` (the hero as a 1200×630 card).
 - Cache tags: every style sheet and script is loaded with one site-wide tag
-  (`?v=r1`); bump it on every release.
+  (`?v=r2`); bump it on every release.
 - "Global Incentive Fee Awards case study":
   `case-studies/global-incentive-fee-awards/index.html`. A case study page,
   not the home page. Its images live in `GIFAcasestudyimages/`.

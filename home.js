@@ -107,7 +107,8 @@
   const place = () => head.style.setProperty('--wm-x', (link.getBoundingClientRect().left - head.getBoundingClientRect().left - parseFloat(getComputedStyle(head).paddingLeft)) + 'px');
   let t;
   let quiet = false; // set while Esc hands focus back to WORK, so that focus doesn't reopen the menu
-  const open = () => { if (quiet) return; leaving = false; clearTimeout(t); place(); root.classList.add('menu-open'); link.setAttribute('aria-expanded', 'true'); };
+  let clicked = false; // set by a click on WORK or a square: the menu stays shut until the pointer leaves them
+  const open = () => { if (quiet || clicked) return; leaving = false; clearTimeout(t); place(); root.classList.add('menu-open'); link.setAttribute('aria-expanded', 'true'); };
   let leaving = false;
   const close = () => { if (leaving) return; leaving = true; clearTimeout(t); t = setTimeout(() => shut(), 250); }; // grace: the preview may still be sliding open
   const show = i => {
@@ -120,6 +121,8 @@
     root.classList.add('previewing');
   };
   [trigger, menu].forEach(el => { el.addEventListener('pointerenter', open); el.addEventListener('pointerleave', close); });
+  trigger.addEventListener('click', () => { shut(); clicked = true; });
+  trigger.addEventListener('pointerleave', () => { clicked = false; });
   // a backstop for the leave events: the pointer anywhere but WORK, the list or the open preview starts the close;
   // coming back cancels it
   addEventListener('pointermove', e => {
@@ -128,7 +131,7 @@
     if (inside) { if (leaving) open(); } else close();
   }, { passive: true });
   link.addEventListener('focus', open);
-  link.addEventListener('blur', e => { if (!menu.contains(e.relatedTarget)) close(); });
+  link.addEventListener('blur', e => { clicked = false; if (!menu.contains(e.relatedTarget)) close(); });
   menu.addEventListener('focusout', e => { if (!menu.contains(e.relatedTarget) && e.relatedTarget !== link) close(); });
   items.forEach((m, i) => { m.addEventListener('pointerenter', () => show(i)); m.addEventListener('focus', () => { open(); show(i); }); });
   const shut = () => { leaving = false; clearTimeout(t); root.classList.remove('menu-open', 'previewing'); link.setAttribute('aria-expanded', 'false'); show(-1); };
