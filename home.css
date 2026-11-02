@@ -194,6 +194,7 @@ body { overflow-x: clip; } /* the signature runs off the window's right edge; no
 .tagline { animation: rise .9s var(--ease) both .25s; }
 .down { animation: rise .9s var(--ease) both .4s; }
 .s-home .sig { animation: glow 1.6s ease both .6s; }
+.js .s-home .sig:not(.ready) { animation: none; opacity: 0; } /* waits for its image (index.html), then fades */
 @media (prefers-reduced-motion: reduce) {
   .hero-title, .tagline, .down, .s-home .sig { animation: none; }
   .op-shot, .pv-comp, .arrow, .cs-cursor { transition: none; }

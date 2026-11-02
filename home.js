@@ -84,7 +84,8 @@
   const label = cur.querySelector('span');
   addEventListener('pointermove', e => { cur.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`; }, { passive: true });
   $$('.s-work').forEach(s => {
-    s.addEventListener('pointerenter', () => {
+    s.addEventListener('pointerenter', e => {
+      cur.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`; // no pointermove yet (page just loaded): not at the corner
       const soon = s.classList.contains('soon');
       cur.classList.toggle('soon', soon); label.textContent = soon ? 'Case study coming soon' : 'View case study';
       cur.classList.add('on');
