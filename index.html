@@ -17,13 +17,35 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="UX &amp; Product Designer: I make complicated software feel obvious. Amaan Baig's signature in blue light.">
   <meta name="twitter:card" content="summary_large_image">
+  <!-- the hero's images are CSS backgrounds, found only once the style sheets arrive: ask for them first, ahead of
+       the case-study screens further down. The signature fades in once it has arrived, not on a fixed timer, so
+       on a slow connection it no longer pops in after its fade has already run -->
+  <link rel="preload" as="image" href="assets/home-bg2.webp?v=1" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/hero-glow.webp?v=1" fetchpriority="high">
+  <script>
+    document.documentElement.classList.add('js');
+    (function () {
+      var img = new Image(), done = false;
+      function show() {
+        if (done) return;
+        var sig = document.querySelector('.s-home .sig');
+        if (!sig) { document.addEventListener('DOMContentLoaded', show, { once: true }); return; }
+        done = true;
+        sig.style.animationDelay = Math.max(0, 600 - performance.now()) + 'ms'; // keep the planned .6s, but never wait longer
+        sig.classList.add('ready');
+      }
+      img.onload = img.onerror = function () { (img.decode ? img.decode() : Promise.resolve()).then(show, show); };
+      img.src = 'assets/home-bg2.webp?v=1';
+      setTimeout(show, 8000); // a stalled download: show it anyway
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap">
-  <link rel="stylesheet" href="styles.css?v=r3">
-  <link rel="stylesheet" href="case-studies/case-study.css?v=r3">
-  <link rel="stylesheet" href="contact/contact.css?v=r3">
-  <link rel="stylesheet" href="home.css?v=r3">
+  <link rel="stylesheet" href="styles.css?v=r4">
+  <link rel="stylesheet" href="case-studies/case-study.css?v=r4">
+  <link rel="stylesheet" href="contact/contact.css?v=r4">
+  <link rel="stylesheet" href="home.css?v=r4">
 </head>
 <body>
   <header class="site-head">
@@ -73,9 +95,9 @@
     <div id="work">
       <section class="snap s-work" id="gifa" aria-labelledby="t-gifa">
         <div class="op-shot"><span class="pv-comp trio">
-          <img class="pv-left" width="1653" height="1092" src="GIFAcasestudyimages/GIFAheroleft.webp" alt="">
-          <img class="pv-right" width="1653" height="1092" src="GIFAcasestudyimages/GIFAheroright.webp" alt="">
-          <img class="pv-center" width="1733" height="1092" src="GIFAcasestudyimages/GIFAherocenter.webp" alt="">
+          <img class="pv-left" width="1653" height="1092" src="GIFAcasestudyimages/GIFAheroleft.webp" alt="" decoding="async">
+          <img class="pv-right" width="1653" height="1092" src="GIFAcasestudyimages/GIFAheroright.webp" alt="" decoding="async">
+          <img class="pv-center" width="1733" height="1092" src="GIFAcasestudyimages/GIFAherocenter.webp" alt="" decoding="async">
         </span></div>
         <div class="cap">
           <h2 id="t-gifa"><a href="case-studies/global-incentive-fee-awards/">Saved millions of dollars in taxes</a></h2>
@@ -86,8 +108,8 @@
 
       <section class="snap s-work" id="fee-management" aria-labelledby="t-fee">
         <div class="op-shot"><span class="pv-comp duo">
-          <img class="pv-back" width="1254" height="813" src="Feemanagementcasestudyimages/Heroright.webp" alt="">
-          <img class="pv-front" width="1505" height="970" src="Feemanagementcasestudyimages/Heroleft.webp" alt="">
+          <img class="pv-back" width="1254" height="813" src="Feemanagementcasestudyimages/Heroright.webp" alt="" loading="lazy" decoding="async">
+          <img class="pv-front" width="1505" height="970" src="Feemanagementcasestudyimages/Heroleft.webp" alt="" loading="lazy" decoding="async">
         </span></div>
         <div class="cap">
           <h2 id="t-fee"><a href="case-studies/fee-management/">Cut fee management effort by 40 minutes</a></h2>
@@ -98,7 +120,7 @@
 
       <section class="snap s-work" id="creating-automation" aria-labelledby="t-auto">
         <div class="op-shot"><span class="pv-comp solo">
-          <img class="pv-center" width="1793" height="1152" src="Creatingautomationcasestudyimages/Group%201321317990.webp" alt="">
+          <img class="pv-center" width="1793" height="1152" src="Creatingautomationcasestudyimages/Group%201321317990.webp" alt="" loading="lazy" decoding="async">
         </span></div>
         <div class="cap">
           <h2 id="t-auto"><a href="case-studies/creating-automation/">Reduced support calls</a></h2>
@@ -110,8 +132,8 @@
       <!-- the case study to come: a full section, but not a link; its opening pairs two screens -->
       <section class="snap s-work soon" id="stamp" aria-labelledby="t-stamp">
         <div class="op-shot"><span class="pv-comp duo">
-          <img class="pv-back" width="1575" height="989" src="Stampcasestudyimages/Hero%20Image%20right.webp" alt="">
-          <img class="pv-front" width="1575" height="988" src="Stampcasestudyimages/Hero%20Image%20Left.webp" alt="">
+          <img class="pv-back" width="1575" height="989" src="Stampcasestudyimages/Hero%20Image%20right.webp" alt="" loading="lazy" decoding="async">
+          <img class="pv-front" width="1575" height="988" src="Stampcasestudyimages/Hero%20Image%20Left.webp" alt="" loading="lazy" decoding="async">
         </span></div>
         <div class="cap">
           <h2 id="t-stamp">Reduced the compliance review effort with AI</h2>
@@ -145,8 +167,8 @@
       <footer class="contact-foot"><p>© 2026 Amaan Baig</p></footer>
     </section>
   </main>
-  <script src="contact/contact.js?v=r3" defer></script>
-  <script src="home.js?v=r3" defer></script>
-  <script src="site-menu.js?v=r3" defer></script>
+  <script src="contact/contact.js?v=r4" defer></script>
+  <script src="home.js?v=r4" defer></script>
+  <script src="site-menu.js?v=r4" defer></script>
 </body>
 </html>

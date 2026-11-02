@@ -49,7 +49,9 @@ as needed, keeping the intent of the reference.
   which stays clear while the hero is in view (the hero reaches up under it);
   the frame lines (the header's rule and the right frame line) run behind it,
   and the crossbar runs past the frame to the window's edge; "↓ Selected case studies" at the bottom left. On load the title,
-  statement and label rise in and the signature fades in last.
+  statement and label rise in and the signature fades in last, once its image
+  has arrived (index.html preloads it and the glow, and holds the fade until
+  then; the case-study screens below the first load lazily).
   Case-study sections: the case study's opening composition on a light panel
   (`--surface`), laptops cut off at the bottom, with side padding so their outer
   edges line up with the text below (`--pad`); one laptop (`.solo`), two
@@ -107,7 +109,7 @@ as needed, keeping the intent of the reference.
   carry their width and height. Sharing: every page has Open Graph tags, the
   image `assets/og-image.jpg` (the hero as a 1200×630 card).
 - Cache tags: every style sheet and script is loaded with one site-wide tag
-  (`?v=r3`); bump it on every release.
+  (`?v=r4`); bump it on every release.
 - "Global Incentive Fee Awards case study":
   `case-studies/global-incentive-fee-awards/index.html`. A case study page,
   not the home page. Its images live in `GIFAcasestudyimages/`.
