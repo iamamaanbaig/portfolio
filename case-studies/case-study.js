@@ -328,29 +328,39 @@
   };
 
   /* A wheel gesture, read as one step. A trackpad sends a stream of small events (the swipe, then its
-     inertia) that never goes quiet; a mouse sends one large event per notch. The deltas of a gesture add up
-     until they reach a threshold, which moves one step; the rest of that gesture (its inertia) is ignored.
-     Inertia only fades, so a clear rise after the step means the finger has swiped again. */
+     inertia, which can run on for seconds) that never goes quiet; a mouse sends one large event per notch.
+     The deltas of a gesture add up until they reach a threshold, which moves one step; the rest of the
+     gesture is ignored. Inertia only slows down and never turns round, so once it has started slowing, a
+     clear rise above its slowest point, or a delta in the other direction, is the finger swiping again, even
+     while the inertia is still running. Speeds are per millisecond, so events the browser merges or splits
+     between frames don't read as a rise. */
   const wheelStep = (() => {
-    let last = 0, acc = 0, fired = false, low = 0, firedAt = 0;
+    let last = 0, prevSpeed = 0, acc = 0, fired = 0, firedAt = 0, low = 0, slowing = false, rearmed = false;
     return (e, busy) => {
       const now = performance.now();
       const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1; // lines / pages to px
       const dx = e.deltaX * unit, dy = e.deltaY * unit;
       const d = Math.abs(dx) > Math.abs(dy) ? dx : dy;
       const a = Math.abs(d);
-      if (now - last > 160) { acc = 0; fired = false; }
+      if (!a) return 0;
+      const gap = now - last;
       last = now;
+      if (gap > 160) { acc = 0; fired = 0; rearmed = false; prevSpeed = 0; }
+      const speed = a / Math.min(50, Math.max(8, gap)); // px per ms
+      const before = prevSpeed;
+      prevSpeed = speed;
       if (fired) {
-        low = Math.min(low, a);
-        if (busy || now - firedAt < 250 || a <= Math.max(low * 3, 12)) return 0;
-        fired = false; acc = 0;
-      }
+        if (!slowing) { if (speed < before * .95) { slowing = true; low = speed; } } // still the same swipe
+        else low = Math.min(low, speed);
+        const fresh = Math.sign(d) !== fired || (slowing && a >= 4 && speed > low * 1.5);
+        if (busy || now - firedAt < 200 || !fresh) return 0;
+        fired = 0; acc = 0; rearmed = true;
+      } else if (rearmed && speed < before * .6) acc = 0; // slowing again: that was inertia, not a new swipe
       if (acc && Math.sign(d) !== Math.sign(acc)) acc = 0;
       acc += d;
       if (busy || Math.abs(acc) < 20) return 0;
-      fired = true; low = a; firedAt = now; acc = 0;
-      return Math.sign(d);
+      fired = Math.sign(d); firedAt = now; slowing = false; acc = 0; rearmed = false;
+      return fired;
     };
   })();
   addEventListener('wheel', e => {
