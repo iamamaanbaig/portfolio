@@ -8,7 +8,7 @@
   const head = () => document.querySelector('.site-head').offsetHeight;
   const top = i => Math.max(0, Math.min(stops[i].offsetTop - head(), document.documentElement.scrollHeight - innerHeight));
 
-  let animating = false, lastWheel = 0;
+  let animating = false;
   const glide = to => {
     const from = scrollY;
     if (Math.abs(to - from) < 2) return;
@@ -32,13 +32,38 @@
   };
   const go = i => glide(top(Math.max(0, Math.min(stops.length - 1, i))));
 
+  /* A wheel gesture, read as one step. A trackpad sends a stream of small events (the swipe, then its
+     inertia) that never goes quiet; a mouse sends one large event per notch. The deltas of a gesture add up
+     until they reach a threshold, which moves one step; the rest of that gesture (its inertia) is ignored.
+     Inertia only fades, so a clear rise after the step means the finger has swiped again. */
+  const wheelStep = (() => {
+    let last = 0, acc = 0, fired = false, low = 0, firedAt = 0;
+    return (e, busy) => {
+      const now = performance.now();
+      const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1; // lines / pages to px
+      const dx = e.deltaX * unit, dy = e.deltaY * unit;
+      const d = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+      const a = Math.abs(d);
+      if (now - last > 160) { acc = 0; fired = false; }
+      last = now;
+      if (fired) {
+        low = Math.min(low, a);
+        if (busy || now - firedAt < 250 || a <= Math.max(low * 3, 12)) return 0;
+        fired = false; acc = 0;
+      }
+      if (acc && Math.sign(d) !== Math.sign(acc)) acc = 0;
+      acc += d;
+      if (busy || Math.abs(acc) < 20) return 0;
+      fired = true; low = a; firedAt = now; acc = 0;
+      return Math.sign(d);
+    };
+  })();
   addEventListener('wheel', e => {
     if (!desktop() || e.ctrlKey) return;
     e.preventDefault();
-    const now = performance.now(), quiet = now - lastWheel > 160;
-    lastWheel = now;
-    if (animating || !quiet || Math.abs(e.deltaY) < 4) return;
-    go(current() + Math.sign(e.deltaY));
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // sideways swipes don't move the page
+    const dir = wheelStep(e, animating);
+    if (dir) go(current() + dir);
   }, { passive: false });
   addEventListener('keydown', e => {
     if (!desktop() || e.target.closest('textarea, input')) return;

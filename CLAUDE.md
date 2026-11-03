@@ -109,7 +109,7 @@ as needed, keeping the intent of the reference.
   carry their width and height. Sharing: every page has Open Graph tags, the
   image `assets/og-image.jpg` (the hero as a 1200×630 card).
 - Cache tags: every style sheet and script is loaded with one site-wide tag
-  (`?v=r4`); bump it on every release.
+  (`?v=r5`); bump it on every release.
 - "Global Incentive Fee Awards case study":
   `case-studies/global-incentive-fee-awards/index.html`. A case study page,
   not the home page. Its images live in `GIFAcasestudyimages/`.
